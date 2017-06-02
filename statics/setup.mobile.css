@@ -1,0 +1,28 @@
+@media screen and (max-width: 700px) {
+  body {
+    align-items: flex-start;
+  }
+
+  .setup-root {
+    width: auto;
+  }
+
+  .goto-list {
+    position: static;
+    padding: 30px 30px 0 30px;
+  }
+
+  .bio {
+    text-align: left;
+    padding: 30px 0;
+  }
+
+  .latest-update {
+    margin-bottom: 30px;
+    padding: 0;
+  }
+
+  .setup {
+    max-width: 100%;
+  }
+}

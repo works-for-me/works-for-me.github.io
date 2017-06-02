@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Works For Me</title>
+    <description>Collection of setups from people who cares about tools they use</description>
+    <link>https://works-for-me.github.io</link>
+    <language>en</language>
+    <item>
+      <title>Updated setup: Nikolay Garmash (Front-end developer)</title>
+      <description>Switch to WebStorm Switched from Sublime Text as it's pretty much not supported as well as third-party plugins.</description>
+      <author>Nikolay Garmash (Front-end developer)</author>
+      <pubDate>Thu, 16 Mar 2017 16:15:20 GMT</pubDate>
+      <guid>6d6e0d0152ad57ee65ff155ae1c0dffdcf472cb5</guid>
+      <link>https://works-for-me.github.io/setups/nikolay-garmash.html</link>
+    </item>
+  </channel>
+</rss>
