@@ -6,7 +6,7 @@
   <title>Nikolay Garmash</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Front-end developer's software setup">
+  <meta name="description" content="Frontend developer's software setup">
   <meta name="author" content="Nikolay Garmash">
   <link rel="stylesheet" href="../statics/setup.css">
   <link rel="stylesheet" href="../statics/setup.mobile.css">
@@ -20,59 +20,45 @@
   <div class="setup-root">
     <section class="bio">
       <h1 class="name">Nikolay Garmash</h1>
-      <div class="occupation">Front-end developer</div>
+      <div class="occupation">Frontend developer</div>
       <div class="location">Berlin, Germany</div>
       <a class="link" href="https://twitter.com/garmashnikolay">@garmashnikolay</a>
     </section>
     <section class="setup">
       <article class="latest-update">
-        <div class="latest-update-date">Latest update on Mar 16, 2017</div>
+        <div class="latest-update-date">Latest update on Jun 6, 2017</div>
         <div class="latest-update-body">
-          <h5 class="latest-update-title">Switch to WebStorm</h5>
-          <p class="latest-update-message">Switched from Sublime Text as it's pretty much not supported as well as third-party plugins.</p>
+          <h5 class="latest-update-title">Major refactoring of the setup.</h5>
         </div>
       </article>
       <article class="environment">
         <section class="environment-header">
-          <h2 class="environment-title">desktop</h2>
-          <div class="description">My laptop is MacBook Pro (Retina, 15-inch, Mid 2015)</div>
+          <h2 class="environment-title">Frontenddevelopment</h2>
+          <div class="description">Core toolkit to be productive and creative when doing my job.
+            <br>My laptop is MacBook Pro (Retina, 15-inch, Mid 2015) with 2,5 GHz Intel Core i7 and 16GB of RAM.</div>
         </section>
         <section class="tools-list">
-          <div class="tool-item">
-            <div class="tool-head">
-              <div class="tool-names-list">
-                <span class="tool-name" tabindex="0">Chrome</span>
-              </div>
-            </div>
-            <div class="description">Developer tools are crucial for me.</div>
-          </div>
           <div class="tool-item">
             <div class="tool-head">
               <div class="tool-names-list">
                 <a class="tool-name" href="https://www.jetbrains.com/webstorm/">WebStorm</a>
               </div>
             </div>
-            <div class="description">Its refactoring features really save me a lot of time. Autocompletion works pretty well, especially with typed languages. Multiple projects management is done the way I like — isolated environment and dedicated configuration for every project.
+            <div class="description">For a long time I was strongly against "heavy" IDEs and was switching between different editors like Sublime Text, Atom, VSCode, etc. At some point I realised I want more routine to be done for me so I could concentrate on more important stuff.
               <br>
-              <br>I use Vim–mode for editing and custom key–bindings for other stuff like navigation. Also I'm always in "Distraction Free" mode, so I see only two splits with code, all other stuff popup by hotkeys.
+              <br>At the second attempt I finally switched to WebStorm and it's just awesome. It takes some time (couple of weeks in my case) to get out of your comfort zone and learn new key-bindings, configure everything just like you want and wrap your head around some of the local concepts, but it's totally worth it.
               <br>
-              <br>One of most important — it is stable and heavily maintained.</div>
-          </div>
-          <div class="tool-item">
-            <div class="tool-head">
-              <div class="tool-names-list">
-                <a class="tool-name" href="https://todoist.com">Todoist</a>
-              </div>
-            </div>
-            <div class="description">Not really fond of this app... Using it like a straight forward checkboxes list.</div>
-          </div>
-          <div class="tool-item">
-            <div class="tool-head">
-              <div class="tool-names-list">
-                <span class="tool-name" tabindex="0">Notes</span>
-              </div>
-            </div>
-            <div class="description">Default macOS Notes app has out of the box everything: create notes quickly, simple reach-editing, sync across all devices.</div>
+              <br>Refactoring feature — one of the most underestimated be me in the past, it saves me a lot of time every single day. Rename a project-wide constant, rename variable in scope, rename/move a file and refactor all imports, move function to another file — ones of the most used.
+              <br>
+              <br>Autocompletion is great, especially with statically-typed languages.
+              <br>
+              <br>One of my must-have plugins is IdeaVim. I'm not a power vim-user but navigation and window-management with vim-shortcuts are much faster and, somehow, intuitive for me).
+              <br>
+              <br>I work all the time in "Distraction Free" mode, so I see only my code and everything else is done with shortcuts.
+              <br>
+              <br>My font for a couple of years already is "Source Code Pro", could not find anything better yet.
+              <br>
+              <br>If you are a web-developer, give WebStorm a try, it's fast, stable and being developed with a good pace.</div>
           </div>
           <div class="tool-item">
             <div class="tool-head">
@@ -80,118 +66,86 @@
                 <a class="tool-name" href="https://www.iterm2.com/">iTerm 2</a>
               </div>
             </div>
-            <div class="description">Has two features that stop me from switching to default macOS Terminal:
+            <div class="description">My second most used tool while work.
+              <br>It has two features that stop me from switching to default macOS Terminal app:
+              <br>• Select to copy — really handy to copy anything from terminal by just selecting it
+              <br>• Cmd+click on a link to open it — very common case when developing web-applications</div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-head">
+              <div class="tool-names-list">
+                <a class="tool-name" href="https://github.com/Bash-it/bash-it">Bash-it</a>
+              </div>
+            </div>
+            <div class="description">Set of plugins and completions for your bash shell.
               <br>
-              <br>* Select to copy - really handy to copy anything from terminal by selecting it
-              <br>* Cmd+click on a link to open it</div>
+              <br>I've tried ZSH and Fish-shell (latter is super nice btw) but often those shells were a problem for third-party applications which was written with thought that bash is the only possible shell in the universe.
+              <br>
+              <br>Bash-it does not cover all of the nice features in ZSH or Fish, but it covers a lot. It has good git-plugin to suggest your current branch and stuff like this, commands history, etc. All kinds of completions are there as well as different themes.</div>
           </div>
           <div class="tool-item">
             <div class="tool-head">
               <div class="tool-names-list">
-                <a class="tool-name" href="https://1password.com/">1Password</a>
+                <a class="tool-name" href="https://github.com/so-fancy/diff-so-fancy">diff-so-fancy</a>
               </div>
             </div>
-            <div class="description">Stores for me not only password but also important documents, notes, credit card, etc.</div>
+            <div class="description">Little tool which makes your git-diffs much more legible.</div>
           </div>
           <div class="tool-item">
             <div class="tool-head">
               <div class="tool-names-list">
-                <a class="tool-name" href="https://play.google.com/">Google Music</a>
-                <span class="tool-names-list-separator">,</span>
-                <a class="tool-name" href="http://coppertino.com/">Vox</a>
+                <a class="tool-name" href="https://github.com/jakubroztocil/httpie">HTTPie</a>
               </div>
             </div>
-            <div class="description">Google Music subscription is mostly for mobile but at desktop it's a nice way to check new albums, playlists, etc.
-              <br>Vox for hi-res audio.</div>
+            <div class="description">Nice CLI tool, user-friendly curl-replacement. I just can't help to forget curl flags every time I use it 😁</div>
           </div>
           <div class="tool-item">
             <div class="tool-head">
               <div class="tool-names-list">
-                <span class="tool-name" tabindex="0">Mail</span>
-                <span class="tool-names-list-separator">,</span>
-                <a class="tool-name" href="https://inbox.google.com/">Google Inbox</a>
+                <a class="tool-name" href="http://sipapp.io/">Sip</a>
               </div>
             </div>
-            <div class="description">Default Mail app is for work mail, and Google Inbox is for personal.</div>
+            <div class="description">If you often need to pick colors from everywhere on a screen, Sip is doing this pretty well.
+              <br>
+              <br>It has some advanced features like managing colors collections, but for me it's mostly getting color-picker with a shortcut, picking color from any pixel and after that quickly accessing picked colors from system's main menu.</div>
           </div>
           <div class="tool-item">
             <div class="tool-head">
               <div class="tool-names-list">
-                <a class="tool-name" href="https://www.dropbox.com/">Dropbox</a>
-                <span class="tool-names-list-separator">,</span>
-                <a class="tool-name" href="https://disk.yandex.ru/">Yandex.Disk</a>
+                <a class="tool-name" href="https://www.sketchapp.com/">Sketch</a>
               </div>
             </div>
-            <div class="description">Dropbox has nice integration with lot of services, I use it to store small files and documents.
-              <br>And my Yandex.Disk has 260GB free as I former Yandex employee. Photo backups from my phone go there and any large files I need to sync.</div>
+            <div class="description">Time after time I make mockups for my pet-projects and at least for web-design Sketch fits really well. Heard some good stuff about Adobe XD though, but never really tried it.</div>
           </div>
           <div class="tool-item">
             <div class="tool-head">
               <div class="tool-names-list">
-                <a class="tool-name" href="https://photos.google.com/">Google Photos</a>
+                <a class="tool-name" href="https://www.docker.com">Docker</a>
               </div>
             </div>
-            <div class="description">I think it's best Google's service for a long time, I backup there photos from all devices, make simple editing and share albums.</div>
+            <div class="description">I very like the idea of keeping my development environment in some kind of self-contained boxes, so no matter what happens to my OS (I like to try some early betas of macOS) my projects are safe and ready to run.
+              <br>
+              <br>Previously it was Vagrant, now it's container, as they are much more lightweight.
+              <br>
+              <br>Also I put into containers software which has dependencies I don't want to be in my host OS. E.g. something needs Python or Ruby or whatever — it goes to container, it's the nice way to keep your system clean.</div>
           </div>
         </section>
       </article>
       <article class="environment">
         <section class="environment-header">
-          <h2 class="environment-title">mobile</h2>
-          <div class="description">I'm using elderly iPhone 5S. My phone usage is pretty straight forward - write some texts, read twitter, listen some music, ... No games at all.</div>
+          <h2 class="environment-title">Consuminginformation</h2>
+          <div class="description">That mostly happens on my elderly iPhone 5S.</div>
         </section>
         <section class="tools-list">
           <div class="tool-item">
             <div class="tool-head">
               <div class="tool-names-list">
-                <span class="tool-name" tabindex="0">Safari</span>
+                <a class="tool-name" href="http://reederapp.com">Reeder</a>
+                <span class="tool-names-list-separator">,</span>
+                <a class="tool-name" href="http://feedly.com">Feedly</a>
               </div>
             </div>
-            <div class="description">It just have nice integration with other system components.
-              <br>Also it is faster then Chrome on my opinion.</div>
-          </div>
-          <div class="tool-item">
-            <div class="tool-head">
-              <div class="tool-names-list">
-                <a class="tool-name" href="https://inbox.google.com/">Google Inbox</a>
-              </div>
-            </div>
-          </div>
-          <div class="tool-item">
-            <div class="tool-head">
-              <div class="tool-names-list">
-                <a class="tool-name" href="http://tapbots.com/tweetbot/">Tweetbot</a>
-              </div>
-            </div>
-            <div class="description">It has no dull feed sorting as official client and UI is more convenient for me.</div>
-          </div>
-          <div class="tool-item">
-            <div class="tool-head">
-              <div class="tool-names-list">
-                <span class="tool-name" tabindex="0">Podcasts</span>
-              </div>
-            </div>
-            <div class="description">Default iOS Podcasts app. Switched back from Overcast (https://overcast.fm/), which was very good for a long time but then it became less maintained, ad-banner was added, UI started to feel little noisy. My podcasts list for now looks like this:
-              <br>
-              <br>Just a couple are in English:
-              <br>* Serial (https://serialpodcast.org/)
-              <br>* Javascript Air (https://javascriptair.com/)
-              <br>
-              <br>And all others are in Russian:
-              <br>* Radio-T (https://radio-t.com/)
-              <br>* Web-standards (https://itunes.apple.com/ru/podcast/veb-standarty/id1080500016)
-              <br>* UWP (http://podcast.umputun.com/)
-              <br>* Evergreen Podcast (http://podtema.com/)
-              <br>* RadioJS (https://radiojs.ru/)
-              <br>* Брендятина (http://radiomayak.ru/podcasts/podcast/id/45/)</div>
-          </div>
-          <div class="tool-item">
-            <div class="tool-head">
-              <div class="tool-names-list">
-                <a class="tool-name" href="https://telegram.org/">Telegram</a>
-              </div>
-            </div>
-            <div class="description">I use it not only for messaging with single person, but also for group chats and channels. Channels have become for me another information feed. One of my favourite channel - https://telegram.me/addmeto (Russian).</div>
+            <div class="description">These two work in pair, Feedly manages RSS-subscriptions, and Reeder has really good UI for reading feeds (reading something directly in Feedly is a torture btw, don't do that)</div>
           </div>
           <div class="tool-item">
             <div class="tool-head">
@@ -199,21 +153,78 @@
                 <a class="tool-name" href="https://www.instapaper.com/">Instapaper</a>
               </div>
             </div>
-            <div class="description">I really like that I can save anything just with one click, without specifying folders, tags or anything. And clients for all platforms are very nice.</div>
+            <div class="description">I have it installed on a phone and as an extension in a browser, very handy to save something for late read with just one click.
+              <br>
+              <br>It is also hooked up into Reeder app, so when feeds are empty I can read saved articles within the same app.</div>
           </div>
           <div class="tool-item">
             <div class="tool-head">
               <div class="tool-names-list">
-                <a class="tool-name" href="https://play.google.com/">Google Music</a>
+                <a class="tool-name" href="http://tapbots.com/tweetbot/">Tweetbot</a>
               </div>
             </div>
+            <div class="description">Besides some entertaining, twitter for me is a source of programming-related articles which go to Instapaper. Tweetbot so far i the best client at least because it shows everything in natural chronological order.</div>
           </div>
           <div class="tool-item">
             <div class="tool-head">
               <div class="tool-names-list">
-                <a class="tool-name" href="https://photos.google.com/">Google Photos</a>
+                <span class="tool-name" tabindex="0">Podcasts app</span>
               </div>
             </div>
+            <div class="description">Podcasts for me are one of the main sources of information, not just technical, but in general, and some entertainment of course. I use native iOS Podcasts app, have tried Overcast, but came back. They are mostly in Russian but also few in English.
+              <br>
+              <br>English:
+              <br>• Serial
+              <br>• S-Town
+              <br>• Stuff You Should Know
+              <br>
+              <br>Russian:
+              <br>• Радио-Т
+              <br>• Веб-стандарты
+              <br>• UWP — Еженедельный подкаст от Umputun
+              <br>• Evergreen Podcast
+              <br>• Хекслет
+              <br>• RadioJS
+              <br>• Брендятина (http://radiomayak.ru/podcasts/podcast/id/45/)
+              <br>
+              <br>If you have never tried podcasts, start with Serial, it's high quality detective audio-show.</div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-head">
+              <div class="tool-names-list">
+                <a class="tool-name" href="https://telegram.org/">Telegram</a>
+              </div>
+            </div>
+            <div class="description">Despite it's a messenger, it has so called Channels — thematic feeds, where people post short (mainly) news or thoughts, not cluttered like twitter and one channel is dedicated to some specific topic.
+              <br>
+              <br>You can find services which generate RSS-feed out of a channel, so you can read them in one place with your usual subscriptions.</div>
+          </div>
+        </section>
+      </article>
+      <article class="environment">
+        <section class="environment-header">
+          <h2 class="environment-title">Organizingmyself</h2>
+        </section>
+        <section class="tools-list">
+          <div class="tool-item">
+            <div class="tool-head">
+              <div class="tool-names-list">
+                <span class="tool-name" tabindex="0">Notes</span>
+              </div>
+            </div>
+            <div class="description">I've tried millions on different todo and notes taking apps and all of a sudden realised that key to productivity with such tools is to use as simple solution as possible, so tool does not provoke you to spend time on over-organising things and do some real work instead.
+              <br>
+              <br>The standard Notes app in macOS fits this task perfectly, it's just a bunch of text files with some flavor like checkboxes and simple formatting.
+              <br>
+              <br>For me it's always one note for one project where I collect all todos, URLs to some resources, random notes with ideas, etc. Each project has it's own workspace with unique structure, which is very useful when it comes to creative process of shaping some idea.</div>
+          </div>
+          <div class="tool-item">
+            <div class="tool-head">
+              <div class="tool-names-list">
+                <a class="tool-name" href="https://1password.com/">1Password</a>
+              </div>
+            </div>
+            <div class="description">Very nice app to store not only passwords but also documents, bank-cards information and secret notes, all is encrypted, of course, and, what's important, stored locally.</div>
           </div>
         </section>
       </article>
