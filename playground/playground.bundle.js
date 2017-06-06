@@ -6100,7 +6100,7 @@ function render$8 (tree = []) {
   let contentString = tree
     .slice(1)
     .map(context => context.get('content'))
-    .join('');
+    .join(' ');
 
   return `
     <h2 class="environment-title">${contentString}</h2>
