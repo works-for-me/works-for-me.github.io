@@ -5109,34 +5109,25 @@ var constants = {
   BIO_LINE_TYPE_LINK_TOKEN: 'link:'
 };
 
-const {
-  SPACE_TOKEN,
-  TAB_TOKEN,
-  NEWLINE_TOKEN,
-  RETURN_NEWLINE_TOKEN
-} = constants;
+var SPACE_TOKEN = constants.SPACE_TOKEN;
+var TAB_TOKEN = constants.TAB_TOKEN;
+var NEWLINE_TOKEN = constants.NEWLINE_TOKEN;
+var RETURN_NEWLINE_TOKEN = constants.RETURN_NEWLINE_TOKEN;
 
-const TOKEN_SEPARATORS = [SPACE_TOKEN, TAB_TOKEN];
-const LINE_SEPARATORS = [NEWLINE_TOKEN, RETURN_NEWLINE_TOKEN];
 
-function tokenize (chars) {
-  let tokens = [];
-  let token = '';
+var TOKEN_SEPARATORS = [SPACE_TOKEN, TAB_TOKEN];
+var LINE_SEPARATORS = [NEWLINE_TOKEN, RETURN_NEWLINE_TOKEN];
 
-  chars.forEach((char, index) => {
-    if (
-      !TOKEN_SEPARATORS.includes(char) &&
-      !LINE_SEPARATORS.includes(char)
-    ) {
+function tokenize(chars) {
+  var tokens = [];
+  var token = '';
+
+  chars.forEach(function (char, index) {
+    if (!TOKEN_SEPARATORS.includes(char) && !LINE_SEPARATORS.includes(char)) {
       token += char;
     }
 
-    if (
-      (TOKEN_SEPARATORS.includes(char) ||
-      LINE_SEPARATORS.includes(char) ||
-      index === chars.length - 1) &&
-      token
-    ) {
+    if ((TOKEN_SEPARATORS.includes(char) || LINE_SEPARATORS.includes(char) || index === chars.length - 1) && token) {
       tokens.push(token);
       token = '';
     }
@@ -5151,36 +5142,99 @@ function tokenize (chars) {
 
 var tokenize_1 = tokenize;
 
-const {
-  TOOL_BULLET_TOKEN,
-  ENV_BULLET_TOKEN,
-  COMMENT_BULLET_TOKEN,
-  NEWLINE_TOKEN: NEWLINE_TOKEN$1,
-  RETURN_NEWLINE_TOKEN: RETURN_NEWLINE_TOKEN$1,
-  TOOL_BULLET_LEXEME,
-  ENV_BULLET_LEXEME,
-  COMMENT_BULLET_LEXEME,
-  NEWLINE_LEXEME,
-  WORD_LEXEME
-} = constants;
+var defineProperty = function (obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
 
-let toolBullet = content => ({ type: TOOL_BULLET_LEXEME, content });
-let envBullet = content => ({ type: ENV_BULLET_LEXEME, content });
-let commentBullet = content => ({ type: COMMENT_BULLET_LEXEME, content });
-let newline = content => ({ type: NEWLINE_LEXEME, content });
-let word = content => ({ type: WORD_LEXEME, content });
-
-let lexemesMap = {
-  [TOOL_BULLET_TOKEN]: toolBullet,
-  [ENV_BULLET_TOKEN]: envBullet,
-  [COMMENT_BULLET_TOKEN]: commentBullet,
-  [NEWLINE_TOKEN$1]: newline,
-  [RETURN_NEWLINE_TOKEN$1]: newline,
-  word,
+  return obj;
 };
 
-var lex = function lex (tokens) {
-  let lexemes = tokens.map(token => {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
+var _lexemesMap;
+
+var TOOL_BULLET_TOKEN = constants.TOOL_BULLET_TOKEN;
+var ENV_BULLET_TOKEN = constants.ENV_BULLET_TOKEN;
+var COMMENT_BULLET_TOKEN = constants.COMMENT_BULLET_TOKEN;
+var NEWLINE_TOKEN$1 = constants.NEWLINE_TOKEN;
+var RETURN_NEWLINE_TOKEN$1 = constants.RETURN_NEWLINE_TOKEN;
+var TOOL_BULLET_LEXEME = constants.TOOL_BULLET_LEXEME;
+var ENV_BULLET_LEXEME = constants.ENV_BULLET_LEXEME;
+var COMMENT_BULLET_LEXEME = constants.COMMENT_BULLET_LEXEME;
+var NEWLINE_LEXEME = constants.NEWLINE_LEXEME;
+var WORD_LEXEME = constants.WORD_LEXEME;
+
+
+var toolBullet = function toolBullet(content) {
+  return { type: TOOL_BULLET_LEXEME, content: content };
+};
+var envBullet = function envBullet(content) {
+  return { type: ENV_BULLET_LEXEME, content: content };
+};
+var commentBullet = function commentBullet(content) {
+  return { type: COMMENT_BULLET_LEXEME, content: content };
+};
+var newline = function newline(content) {
+  return { type: NEWLINE_LEXEME, content: content };
+};
+var word = function word(content) {
+  return { type: WORD_LEXEME, content: content };
+};
+
+var lexemesMap = (_lexemesMap = {}, defineProperty(_lexemesMap, TOOL_BULLET_TOKEN, toolBullet), defineProperty(_lexemesMap, ENV_BULLET_TOKEN, envBullet), defineProperty(_lexemesMap, COMMENT_BULLET_TOKEN, commentBullet), defineProperty(_lexemesMap, NEWLINE_TOKEN$1, newline), defineProperty(_lexemesMap, RETURN_NEWLINE_TOKEN$1, newline), defineProperty(_lexemesMap, 'word', word), _lexemesMap);
+
+var lex = function lex(tokens) {
+  var lexemes = tokens.map(function (token) {
     if (lexemesMap[token]) {
       return lexemesMap[token](token);
     }
@@ -5191,26 +5245,23 @@ var lex = function lex (tokens) {
   return lexemes;
 };
 
-const {
-  COMMENT_BULLET_LEXEME: COMMENT_BULLET_LEXEME$1,
-  NEWLINE_LEXEME: NEWLINE_LEXEME$1
-} = constants;
+var COMMENT_BULLET_LEXEME$1 = constants.COMMENT_BULLET_LEXEME;
+var NEWLINE_LEXEME$1 = constants.NEWLINE_LEXEME;
 
-function isCommentStart (lexemes, lexeme, index) {
-  return (index === 0 || lexemes[index - 1].type === NEWLINE_LEXEME$1) &&
-    lexeme.type === COMMENT_BULLET_LEXEME$1;
+
+function isCommentStart(lexemes, lexeme, index) {
+  return (index === 0 || lexemes[index - 1].type === NEWLINE_LEXEME$1) && lexeme.type === COMMENT_BULLET_LEXEME$1;
 }
 
-function isCommentEnd (lexemes, index) {
+function isCommentEnd(lexemes, index) {
   return index !== 0 && lexemes[index - 1].type === NEWLINE_LEXEME$1;
 }
 
-function clearComments (lexemes) {
-  let withinComment = false;
+function clearComments(lexemes) {
+  var withinComment = false;
 
-  return lexemes.reduce((clearedLexemes, lexeme, index) => {
-    withinComment = withinComment && !isCommentEnd(lexemes, index) ||
-      isCommentStart(lexemes, lexeme, index);
+  return lexemes.reduce(function (clearedLexemes, lexeme, index) {
+    withinComment = withinComment && !isCommentEnd(lexemes, index) || isCommentStart(lexemes, lexeme, index);
 
     if (!withinComment) {
       clearedLexemes.push(lexeme);
@@ -5220,18 +5271,18 @@ function clearComments (lexemes) {
   }, []);
 }
 
-var sanitize = function sanitize (lexemes) {
+var sanitize = function sanitize(lexemes) {
   return clearComments(lexemes);
 };
 
-function parseContextContent (lexemes, parser) {
-  let tree = immutable.List([]);
+function parseContextContent(lexemes, parser) {
+  var tree = immutable.List([]);
 
-  lexemes.forEach((lexeme, index) => {
-    let contextStart = parser.isContextStart(tree, lexemes, lexeme, index);
+  lexemes.forEach(function (lexeme, index) {
+    var contextStart = parser.isContextStart(tree, lexemes, lexeme, index);
 
     if (contextStart) {
-      let context = parser.createContext(tree, lexemes, lexeme, index);
+      var context = parser.createContext(tree, lexemes, lexeme, index);
       tree = tree.push(context);
     }
 
@@ -5243,44 +5294,46 @@ function parseContextContent (lexemes, parser) {
   return tree;
 }
 
-function parse (context, parsersMap) {
-  let parser = parsersMap[`parser-${context.get('type')}`];
+function parse(context, parsersMap) {
+  var parser = parsersMap['parser-' + context.get('type')];
 
   if (!parser) {
     return context;
   }
 
-  let parsedContext = context.update('content', content => {
+  var parsedContext = context.update('content', function (content) {
     return parseContextContent(content, parser);
   });
 
-  return parsedContext.update('content', content => {
-    return content.map(context => {
+  return parsedContext.update('content', function (content) {
+    return content.map(function (context) {
       return parse(context, parsersMap);
     });
   });
 }
 
-var parse_1 = function (context = {}, parsersMap = {}) {
-  let tree = parse(context, parsersMap);
+var parse_1 = function parse_1() {
+  var context = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var parsersMap = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  var tree = parse(context, parsersMap);
 
   return tree.toJS();
 };
 
-const {
-  BIO_CONTEXT,
-  SETUP_CONTEXT,
-  ENV_BULLET_LEXEME: ENV_BULLET_LEXEME$1,
-  TOOL_BULLET_LEXEME: TOOL_BULLET_LEXEME$1,
-  NEWLINE_LEXEME: NEWLINE_LEXEME$2
-} = constants;
+var BIO_CONTEXT = constants.BIO_CONTEXT;
+var SETUP_CONTEXT = constants.SETUP_CONTEXT;
+var ENV_BULLET_LEXEME$1 = constants.ENV_BULLET_LEXEME;
+var TOOL_BULLET_LEXEME$1 = constants.TOOL_BULLET_LEXEME;
+var NEWLINE_LEXEME$2 = constants.NEWLINE_LEXEME;
 
-function isContextStart (tree, lexemeList, lexeme, index) {
+
+function isContextStart(tree, lexemeList, lexeme, index) {
   if (index === 0) {
     return true;
   }
 
-  let setupContextIndex = tree.findIndex(context => {
+  var setupContextIndex = tree.findIndex(function (context) {
     return context.get('type') === SETUP_CONTEXT;
   });
 
@@ -5288,15 +5341,13 @@ function isContextStart (tree, lexemeList, lexeme, index) {
     return false;
   }
 
-  let prevLexeme = lexemeList.get(index - 1);
+  var prevLexeme = lexemeList.get(index - 1);
 
-  return prevLexeme.get('type') === NEWLINE_LEXEME$2 &&
-    (lexeme.get('type') === ENV_BULLET_LEXEME$1 ||
-    lexeme.get('type') === TOOL_BULLET_LEXEME$1);
+  return prevLexeme.get('type') === NEWLINE_LEXEME$2 && (lexeme.get('type') === ENV_BULLET_LEXEME$1 || lexeme.get('type') === TOOL_BULLET_LEXEME$1);
 }
 
-function createContext (tree, lexemeList, lexeme, index) {
-  let bioContextIndex = tree.findIndex(context => {
+function createContext(tree, lexemeList, lexeme, index) {
+  var bioContextIndex = tree.findIndex(function (context) {
     return context.get('type') === BIO_CONTEXT;
   });
 
@@ -5313,42 +5364,38 @@ function createContext (tree, lexemeList, lexeme, index) {
   });
 }
 
-function appendTree (tree, lexeme) {
-  return tree.update(tree.size - 1, context => {
-    return context.update('content', content => content.push(lexeme));
+function appendTree(tree, lexeme) {
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(lexeme);
+    });
   });
 }
 
 var body = {
-  isContextStart,
-  createContext,
-  appendTree
+  isContextStart: isContextStart,
+  createContext: createContext,
+  appendTree: appendTree
 };
 
-const {
-  BIO_LINE_CONTEXT,
-  NEWLINE_LEXEME: NEWLINE_LEXEME$3,
-  DESCRIPTION_CONTEXT,
-  BIO_LINE_TYPE_NAME_TOKEN,
-  BIO_LINE_TYPE_OCCUPATION_TOKEN,
-  BIO_LINE_TYPE_LOCATION_TOKEN,
-  BIO_LINE_TYPE_LINK_TOKEN
-} = constants;
+var BIO_LINE_CONTEXT = constants.BIO_LINE_CONTEXT;
+var NEWLINE_LEXEME$3 = constants.NEWLINE_LEXEME;
+var DESCRIPTION_CONTEXT = constants.DESCRIPTION_CONTEXT;
+var BIO_LINE_TYPE_NAME_TOKEN = constants.BIO_LINE_TYPE_NAME_TOKEN;
+var BIO_LINE_TYPE_OCCUPATION_TOKEN = constants.BIO_LINE_TYPE_OCCUPATION_TOKEN;
+var BIO_LINE_TYPE_LOCATION_TOKEN = constants.BIO_LINE_TYPE_LOCATION_TOKEN;
+var BIO_LINE_TYPE_LINK_TOKEN = constants.BIO_LINE_TYPE_LINK_TOKEN;
 
-const BIO_LINE_TYPES = [
-  BIO_LINE_TYPE_NAME_TOKEN,
-  BIO_LINE_TYPE_OCCUPATION_TOKEN,
-  BIO_LINE_TYPE_LOCATION_TOKEN,
-  BIO_LINE_TYPE_LINK_TOKEN
-];
 
-function isContextStart$1 (tree, lexemeList, lexeme, index) {
+var BIO_LINE_TYPES = [BIO_LINE_TYPE_NAME_TOKEN, BIO_LINE_TYPE_OCCUPATION_TOKEN, BIO_LINE_TYPE_LOCATION_TOKEN, BIO_LINE_TYPE_LINK_TOKEN];
+
+function isContextStart$1(tree, lexemeList, lexeme, index) {
   if (index === 0) {
     return true;
   }
 
-  let currentContext = tree.get(tree.size - 1);
-  let prevLexeme = lexemeList.get(index - 1);
+  var currentContext = tree.get(tree.size - 1);
+  var prevLexeme = lexemeList.get(index - 1);
 
   if (prevLexeme.get('type') !== NEWLINE_LEXEME$3) {
     return false;
@@ -5361,7 +5408,7 @@ function isContextStart$1 (tree, lexemeList, lexeme, index) {
   return currentContext.get('type') !== DESCRIPTION_CONTEXT;
 }
 
-function createContext$1 (tree, lexemeList, lexeme, index) {
+function createContext$1(tree, lexemeList, lexeme, index) {
   if (BIO_LINE_TYPES.includes(lexeme.get('content'))) {
     return immutable.fromJS({
       type: BIO_LINE_CONTEXT,
@@ -5375,9 +5422,11 @@ function createContext$1 (tree, lexemeList, lexeme, index) {
   });
 }
 
-function appendTree$1 (tree, lexeme) {
-  return tree.update(tree.size - 1, context => {
-    return context.update('content', content => content.push(lexeme));
+function appendTree$1(tree, lexeme) {
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(lexeme);
+    });
   });
 }
 
@@ -5387,33 +5436,33 @@ var bio = {
   appendTree: appendTree$1
 };
 
-const {
-  ENVIRONMENT_CONTEXT,
-  ENV_BULLET_LEXEME: ENV_BULLET_LEXEME$2,
-  NEWLINE_LEXEME: NEWLINE_LEXEME$4
-} = constants;
+var ENVIRONMENT_CONTEXT = constants.ENVIRONMENT_CONTEXT;
+var ENV_BULLET_LEXEME$2 = constants.ENV_BULLET_LEXEME;
+var NEWLINE_LEXEME$4 = constants.NEWLINE_LEXEME;
 
-function isContextStart$2 (tree, lexemeList, lexeme, index) {
+
+function isContextStart$2(tree, lexemeList, lexeme, index) {
   if (index === 0) {
     return true;
   }
 
-  let prevLexeme = lexemeList.get(index - 1);
+  var prevLexeme = lexemeList.get(index - 1);
 
-  return prevLexeme.get('type') === NEWLINE_LEXEME$4 &&
-    lexeme.get('type') === ENV_BULLET_LEXEME$2;
+  return prevLexeme.get('type') === NEWLINE_LEXEME$4 && lexeme.get('type') === ENV_BULLET_LEXEME$2;
 }
 
-function createContext$2 (tree, lexemeList, lexeme, index) {
+function createContext$2(tree, lexemeList, lexeme, index) {
   return immutable.fromJS({
     type: ENVIRONMENT_CONTEXT,
     content: []
   });
 }
 
-function appendTree$2 (tree, lexeme) {
-  return tree.update(tree.size - 1, context => {
-    return context.update('content', content => content.push(lexeme));
+function appendTree$2(tree, lexeme) {
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(lexeme);
+    });
   });
 }
 
@@ -5423,20 +5472,19 @@ var setup = {
   appendTree: appendTree$2
 };
 
-let {
-  ENVIRONMENT_HEADER_CONTEXT,
-  TOOLS_LIST_CONTEXT,
-  ENV_BULLET_LEXEME: ENV_BULLET_LEXEME$3,
-  TOOL_BULLET_LEXEME: TOOL_BULLET_LEXEME$2,
-  NEWLINE_LEXEME: NEWLINE_LEXEME$5
-} = constants;
+var ENVIRONMENT_HEADER_CONTEXT = constants.ENVIRONMENT_HEADER_CONTEXT;
+var TOOLS_LIST_CONTEXT = constants.TOOLS_LIST_CONTEXT;
+var ENV_BULLET_LEXEME$3 = constants.ENV_BULLET_LEXEME;
+var TOOL_BULLET_LEXEME$2 = constants.TOOL_BULLET_LEXEME;
+var NEWLINE_LEXEME$5 = constants.NEWLINE_LEXEME;
 
-function isContextStart$3 (tree, lexemeList, lexeme, index) {
+
+function isContextStart$3(tree, lexemeList, lexeme, index) {
   if (index === 0) {
     return true;
   }
 
-  let toolsContextIndex = tree.findIndex(context => {
+  var toolsContextIndex = tree.findIndex(function (context) {
     return context.get('type') === TOOLS_LIST_CONTEXT;
   });
 
@@ -5444,19 +5492,18 @@ function isContextStart$3 (tree, lexemeList, lexeme, index) {
     return false;
   }
 
-  let prevLexeme = lexemeList.get(index - 1);
+  var prevLexeme = lexemeList.get(index - 1);
 
-  return prevLexeme.get('type') === NEWLINE_LEXEME$5 &&
-    lexeme.get('type') === TOOL_BULLET_LEXEME$2;
+  return prevLexeme.get('type') === NEWLINE_LEXEME$5 && lexeme.get('type') === TOOL_BULLET_LEXEME$2;
 }
 
-function createContext$3 (tree, lexemeList, lexeme, index) {
+function createContext$3(tree, lexemeList, lexeme, index) {
   if (lexeme.get('type') === ENV_BULLET_LEXEME$3) {
     return immutable.fromJS({
       type: ENVIRONMENT_HEADER_CONTEXT,
       content: []
     });
- }
+  }
 
   return immutable.fromJS({
     type: TOOLS_LIST_CONTEXT,
@@ -5464,9 +5511,11 @@ function createContext$3 (tree, lexemeList, lexeme, index) {
   });
 }
 
-function appendTree$3 (tree, lexeme) {
-  return tree.update(tree.size - 1, context => {
-    return context.update('content', content => content.push(lexeme));
+function appendTree$3(tree, lexeme) {
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(lexeme);
+    });
   });
 }
 
@@ -5476,18 +5525,17 @@ var environment = {
   appendTree: appendTree$3
 };
 
-let {
-  ENVIRONMENT_TITLE_CONTEXT,
-  DESCRIPTION_CONTEXT: DESCRIPTION_CONTEXT$1,
-  NEWLINE_LEXEME: NEWLINE_LEXEME$6
-} = constants;
+var ENVIRONMENT_TITLE_CONTEXT = constants.ENVIRONMENT_TITLE_CONTEXT;
+var DESCRIPTION_CONTEXT$1 = constants.DESCRIPTION_CONTEXT;
+var NEWLINE_LEXEME$6 = constants.NEWLINE_LEXEME;
 
-function isContextStart$4 (tree, lexemeList, lexeme, index) {
+
+function isContextStart$4(tree, lexemeList, lexeme, index) {
   if (index === 0) {
     return true;
   }
 
-  let descriptionContextIndex = tree.findIndex(context => {
+  var descriptionContextIndex = tree.findIndex(function (context) {
     return context.get('type') === DESCRIPTION_CONTEXT$1;
   });
 
@@ -5495,13 +5543,13 @@ function isContextStart$4 (tree, lexemeList, lexeme, index) {
     return false;
   }
 
-  let prevLexeme = lexemeList.get(index - 1);
+  var prevLexeme = lexemeList.get(index - 1);
 
   return prevLexeme.get('type') === NEWLINE_LEXEME$6;
 }
 
-function createContext$4 (tree, lexemeList, lexeme, index) {
-  let titleContextIndex = tree.findIndex(context => {
+function createContext$4(tree, lexemeList, lexeme, index) {
+  var titleContextIndex = tree.findIndex(function (context) {
     return context.get('type') === ENVIRONMENT_TITLE_CONTEXT;
   });
 
@@ -5518,9 +5566,11 @@ function createContext$4 (tree, lexemeList, lexeme, index) {
   });
 }
 
-function appendTree$4 (tree, lexeme) {
-  return tree.update(tree.size - 1, context => {
-    return context.update('content', content => content.push(lexeme));
+function appendTree$4(tree, lexeme) {
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(lexeme);
+    });
   });
 }
 
@@ -5530,33 +5580,33 @@ var environmentHeader = {
   appendTree: appendTree$4
 };
 
-const {
-  TOOL_ITEM_CONTEXT,
-  TOOL_BULLET_LEXEME: TOOL_BULLET_LEXEME$3,
-  NEWLINE_LEXEME: NEWLINE_LEXEME$7
-} = constants;
+var TOOL_ITEM_CONTEXT = constants.TOOL_ITEM_CONTEXT;
+var TOOL_BULLET_LEXEME$3 = constants.TOOL_BULLET_LEXEME;
+var NEWLINE_LEXEME$7 = constants.NEWLINE_LEXEME;
 
-function isContextStart$5 (tree, lexemeList, lexeme, index) {
+
+function isContextStart$5(tree, lexemeList, lexeme, index) {
   if (index === 0) {
     return true;
   }
 
-  let prevLexeme = lexemeList.get(index - 1);
+  var prevLexeme = lexemeList.get(index - 1);
 
-  return prevLexeme.get('type') === NEWLINE_LEXEME$7 &&
-    lexeme.get('type') === TOOL_BULLET_LEXEME$3;
+  return prevLexeme.get('type') === NEWLINE_LEXEME$7 && lexeme.get('type') === TOOL_BULLET_LEXEME$3;
 }
 
-function createContext$5 (tree, lexemeList, lexeme, index) {
+function createContext$5(tree, lexemeList, lexeme, index) {
   return immutable.fromJS({
     type: TOOL_ITEM_CONTEXT,
     content: []
   });
 }
 
-function appendTree$5 (tree, lexeme) {
-  return tree.update(tree.size - 1, context => {
-    return context.update('content', content => content.push(lexeme));
+function appendTree$5(tree, lexeme) {
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(lexeme);
+    });
   });
 }
 
@@ -5566,18 +5616,17 @@ var toolsList = {
   appendTree: appendTree$5
 };
 
-let {
-  TOOL_HEAD_CONTEXT,
-  DESCRIPTION_CONTEXT: DESCRIPTION_CONTEXT$2,
-  NEWLINE_LEXEME: NEWLINE_LEXEME$8
-} = constants;
+var TOOL_HEAD_CONTEXT = constants.TOOL_HEAD_CONTEXT;
+var DESCRIPTION_CONTEXT$2 = constants.DESCRIPTION_CONTEXT;
+var NEWLINE_LEXEME$8 = constants.NEWLINE_LEXEME;
 
-function isContextStart$6 (tree, lexemeList, lexeme, index) {
+
+function isContextStart$6(tree, lexemeList, lexeme, index) {
   if (index === 0) {
     return true;
   }
 
-  let descriptionContextIndex = tree.findIndex(context => {
+  var descriptionContextIndex = tree.findIndex(function (context) {
     return context.get('type') === DESCRIPTION_CONTEXT$2;
   });
 
@@ -5585,13 +5634,13 @@ function isContextStart$6 (tree, lexemeList, lexeme, index) {
     return false;
   }
 
-  let prevLexeme = lexemeList.get(index - 1);
+  var prevLexeme = lexemeList.get(index - 1);
 
   return prevLexeme.get('type') === NEWLINE_LEXEME$8;
 }
 
-function createContext$6 (tree, lexemeList, lexeme, index) {
-  let titleContextIndex = tree.findIndex(context => {
+function createContext$6(tree, lexemeList, lexeme, index) {
+  var titleContextIndex = tree.findIndex(function (context) {
     return context.get('type') === TOOL_HEAD_CONTEXT;
   });
 
@@ -5608,9 +5657,11 @@ function createContext$6 (tree, lexemeList, lexeme, index) {
   });
 }
 
-function appendTree$6 (tree, lexeme) {
-  return tree.update(tree.size - 1, context => {
-    return context.update('content', content => content.push(lexeme));
+function appendTree$6(tree, lexeme) {
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(lexeme);
+    });
   });
 }
 
@@ -5620,36 +5671,34 @@ var toolItem = {
   appendTree: appendTree$6
 };
 
-let {
-  TOOL_BULLET_LEXEME: TOOL_BULLET_LEXEME$4,
-  TOOL_NAMES_LIST_CONTEXT
-} = constants;
+var TOOL_BULLET_LEXEME$4 = constants.TOOL_BULLET_LEXEME;
+var TOOL_NAMES_LIST_CONTEXT = constants.TOOL_NAMES_LIST_CONTEXT;
 
-function isContextStart$7 (tree, lexemeList, lexeme, index) {
+
+function isContextStart$7(tree, lexemeList, lexeme, index) {
   if (index === 0) {
     return true;
   }
 }
 
-function createContext$7 (tree, lexemeList, lexeme, index) {
+function createContext$7(tree, lexemeList, lexeme, index) {
   return immutable.fromJS({
     type: TOOL_NAMES_LIST_CONTEXT,
     content: []
   });
 }
 
-function appendTree$7 (tree, lexeme) {
-  let currentContext = tree.get(tree.size - 1);
+function appendTree$7(tree, lexeme) {
+  var currentContext = tree.get(tree.size - 1);
 
-  if (
-    currentContext.get('content').size === 0 &&
-    lexeme.get('type') === TOOL_BULLET_LEXEME$4
-  ) {
+  if (currentContext.get('content').size === 0 && lexeme.get('type') === TOOL_BULLET_LEXEME$4) {
     return tree;
   }
 
-  return tree.update(tree.size - 1, context => {
-    return context.update('content', content => content.push(lexeme));
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(lexeme);
+    });
   });
 }
 
@@ -5659,11 +5708,10 @@ var toolHead = {
   appendTree: appendTree$7
 };
 
-let {
-  TOOL_NAME_CONTEXT,
-  TOOL_NAMES_SEPARATOR_TOKEN,
-  NEWLINE_LEXEME: NEWLINE_LEXEME$9
-} = constants;
+var TOOL_NAME_CONTEXT = constants.TOOL_NAME_CONTEXT;
+var TOOL_NAMES_SEPARATOR_TOKEN = constants.TOOL_NAMES_SEPARATOR_TOKEN;
+var NEWLINE_LEXEME$9 = constants.NEWLINE_LEXEME;
+
 
 function hasSeparator(content) {
   return content[content.length - 1] === TOOL_NAMES_SEPARATOR_TOKEN;
@@ -5677,35 +5725,37 @@ function stripSeparator(content) {
   return content.split('').slice(0, -1).join('');
 }
 
-function isContextStart$8 (tree, lexemeList, lexeme, index) {
+function isContextStart$8(tree, lexemeList, lexeme, index) {
   if (index === 0) {
     return true;
   }
 
-  let prevLexeme = lexemeList.get(index - 1);
-  let prevContent = prevLexeme.get('content');
+  var prevLexeme = lexemeList.get(index - 1);
+  var prevContent = prevLexeme.get('content');
 
   return hasSeparator(prevContent);
 }
 
-function createContext$8 () {
+function createContext$8() {
   return immutable.fromJS({
     type: TOOL_NAME_CONTEXT,
     content: []
   });
 }
 
-function appendTree$8 (tree, lexeme) {
+function appendTree$8(tree, lexeme) {
   if (lexeme.get('type') === NEWLINE_LEXEME$9) {
     return tree;
   }
 
-  let strippedLexeme = lexeme.update('content', content => {
+  var strippedLexeme = lexeme.update('content', function (content) {
     return stripSeparator(content);
   });
 
-  return tree.update(tree.size - 1, context => {
-    return context.update('content', content => content.push(strippedLexeme));
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(strippedLexeme);
+    });
   });
 }
 
@@ -5715,36 +5765,35 @@ var toolNamesList = {
   appendTree: appendTree$8
 };
 
-let {
-  TOOL_LINK_CONTEXT,
-  TOOL_TITLE_CONTEXT
-} = constants;
+var TOOL_LINK_CONTEXT = constants.TOOL_LINK_CONTEXT;
+var TOOL_TITLE_CONTEXT = constants.TOOL_TITLE_CONTEXT;
 
-function isLinkStart (content) {
-  const PATTERN = /^\(https?:\/\/.+/;
 
-  return PATTERN.test(content);
-}
-
-function isLinkEnd (content) {
-  const PATTERN = /\)$/;
+function isLinkStart(content) {
+  var PATTERN = /^\(https?:\/\/.+/;
 
   return PATTERN.test(content);
 }
 
-function stripParentheses (content) {
-  const PATTERN = /(^\()|(\)$)/g;
+function isLinkEnd(content) {
+  var PATTERN = /\)$/;
+
+  return PATTERN.test(content);
+}
+
+function stripParentheses(content) {
+  var PATTERN = /(^\()|(\)$)/g;
 
   return content.replace(PATTERN, '');
 }
 
-function isContextStart$9 (tree, lexemeList, lexeme, index) {
+function isContextStart$9(tree, lexemeList, lexeme, index) {
   if (index === 0) {
     return true;
   }
 
-  let prevLexeme = lexemeList.get(index - 1);
-  let currentContext = tree.get(tree.size - 1);
+  var prevLexeme = lexemeList.get(index - 1);
+  var currentContext = tree.get(tree.size - 1);
 
   if (currentContext.get('type') === TOOL_LINK_CONTEXT) {
     return isLinkEnd(prevLexeme.get('content'));
@@ -5753,7 +5802,7 @@ function isContextStart$9 (tree, lexemeList, lexeme, index) {
   }
 }
 
-function createContext$9 (tree, lexemeList, lexeme, index) {
+function createContext$9(tree, lexemeList, lexeme, index) {
   if (isLinkStart(lexeme.get('content'))) {
     return immutable.fromJS({
       type: TOOL_LINK_CONTEXT,
@@ -5767,18 +5816,20 @@ function createContext$9 (tree, lexemeList, lexeme, index) {
   });
 }
 
-function appendTree$9 (tree, lexeme) {
-  let currentContext = tree.get(tree.size - 1);
-  let strippedLexeme = lexeme;
+function appendTree$9(tree, lexeme) {
+  var currentContext = tree.get(tree.size - 1);
+  var strippedLexeme = lexeme;
 
   if (currentContext.get('type') === TOOL_LINK_CONTEXT) {
-    strippedLexeme = lexeme.update('content', content => {
+    strippedLexeme = lexeme.update('content', function (content) {
       return stripParentheses(content);
     });
   }
 
-  return tree.update(tree.size - 1, context => {
-    return context.update('content', content => content.push(strippedLexeme));
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(strippedLexeme);
+    });
   });
 }
 
@@ -5788,54 +5839,44 @@ var toolName = {
   appendTree: appendTree$9
 };
 
-const {
-  BODY_CONTEXT,
-  BODY_PARSER_KEY,
-  BIO_PARSER_KEY,
-  SETUP_PARSER_KEY,
-  ENVIRONMENT_PARSER_KEY,
-  ENVIRONMENT_HEADER_PARSER_KEY,
-  TOOLS_LIST_PARSER_KEY,
-  TOOL_ITEM_PARSER_KEY,
-  TOOL_HEAD_PARSER_KEY,
-  TOOL_NAMES_LIST_PARSER_KEY,
-  TOOL_NAME_PARSER_KEY
-} = constants;
+var _parsersMap;
 
-const parsersMap = {
-  [BODY_PARSER_KEY]: body,
-  [BIO_PARSER_KEY]: bio,
-  [SETUP_PARSER_KEY]: setup,
-  [ENVIRONMENT_PARSER_KEY]: environment,
-  [ENVIRONMENT_HEADER_PARSER_KEY]: environmentHeader,
-  [TOOLS_LIST_PARSER_KEY]: toolsList,
-  [TOOL_ITEM_PARSER_KEY]: toolItem,
-  [TOOL_HEAD_PARSER_KEY]: toolHead,
-  [TOOL_NAMES_LIST_PARSER_KEY]: toolNamesList,
-  [TOOL_NAME_PARSER_KEY]: toolName
-};
+var BODY_CONTEXT = constants.BODY_CONTEXT;
+var BODY_PARSER_KEY = constants.BODY_PARSER_KEY;
+var BIO_PARSER_KEY = constants.BIO_PARSER_KEY;
+var SETUP_PARSER_KEY = constants.SETUP_PARSER_KEY;
+var ENVIRONMENT_PARSER_KEY = constants.ENVIRONMENT_PARSER_KEY;
+var ENVIRONMENT_HEADER_PARSER_KEY = constants.ENVIRONMENT_HEADER_PARSER_KEY;
+var TOOLS_LIST_PARSER_KEY = constants.TOOLS_LIST_PARSER_KEY;
+var TOOL_ITEM_PARSER_KEY = constants.TOOL_ITEM_PARSER_KEY;
+var TOOL_HEAD_PARSER_KEY = constants.TOOL_HEAD_PARSER_KEY;
+var TOOL_NAMES_LIST_PARSER_KEY = constants.TOOL_NAMES_LIST_PARSER_KEY;
+var TOOL_NAME_PARSER_KEY = constants.TOOL_NAME_PARSER_KEY;
 
-var setupAstPlayground = function (content = '') {
-  let chars = [...content];
-  let tokens = tokenize_1(chars);
-  let lexemes = lex(tokens);
-  let sanitizedLexemes = sanitize(lexemes);
-  let bodyContext = immutable.fromJS({
+
+var parsersMap = (_parsersMap = {}, defineProperty(_parsersMap, BODY_PARSER_KEY, body), defineProperty(_parsersMap, BIO_PARSER_KEY, bio), defineProperty(_parsersMap, SETUP_PARSER_KEY, setup), defineProperty(_parsersMap, ENVIRONMENT_PARSER_KEY, environment), defineProperty(_parsersMap, ENVIRONMENT_HEADER_PARSER_KEY, environmentHeader), defineProperty(_parsersMap, TOOLS_LIST_PARSER_KEY, toolsList), defineProperty(_parsersMap, TOOL_ITEM_PARSER_KEY, toolItem), defineProperty(_parsersMap, TOOL_HEAD_PARSER_KEY, toolHead), defineProperty(_parsersMap, TOOL_NAMES_LIST_PARSER_KEY, toolNamesList), defineProperty(_parsersMap, TOOL_NAME_PARSER_KEY, toolName), _parsersMap);
+
+var setupAstPlayground = function setupAstPlayground() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+  var chars = [].concat(toConsumableArray(content));
+  var tokens = tokenize_1(chars);
+  var lexemes = lex(tokens);
+  var sanitizedLexemes = sanitize(lexemes);
+  var bodyContext = immutable.fromJS({
     type: BODY_CONTEXT,
     content: sanitizedLexemes
   });
 
-  let bodyAst = immutable.fromJS(
-    parse_1(bodyContext, parsersMap)
-  );
+  var bodyAst = immutable.fromJS(parse_1(bodyContext, parsersMap));
 
   return bodyAst;
 };
 
-const htmlBeautify = () => {};
+var htmlBeautify = function htmlBeautify() {};
 
-function renderContextContent (content, type, renderersMap) {
-  let renderer = renderersMap[`renderer-${type}`];
+function renderContextContent(content, type, renderersMap) {
+  var renderer = renderersMap['renderer-' + type];
 
   if (!renderer) {
     return '';
@@ -5844,27 +5885,29 @@ function renderContextContent (content, type, renderersMap) {
   return renderer.render(content);
 }
 
-function render (tree, renderersMap) {
-  let content = tree.get('content');
-  let type = tree.get('type');
+function render(tree, renderersMap) {
+  var content = tree.get('content');
+  var type = tree.get('type');
 
   if (!immutable.List.isList(content)) {
     return tree;
   }
 
-  let renderedTree = tree.update('content', content => {
-    return content.map(context => {
+  var renderedTree = tree.update('content', function (content) {
+    return content.map(function (context) {
       return render(context, renderersMap);
     });
   });
 
-  return renderedTree.update('content', content => {
+  return renderedTree.update('content', function (content) {
     return renderContextContent(content, type, renderersMap);
   });
 }
 
-var render_1 = function (tree, renderersMap, beautify = true) {
-  let content = render(immutable.fromJS(tree), renderersMap).get('content');
+var render_1 = function render_1(tree, renderersMap) {
+  var beautify = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+  var content = render(immutable.fromJS(tree), renderersMap).get('content');
 
   if (beautify) {
     return htmlBeautify(content);
@@ -5873,132 +5916,120 @@ var render_1 = function (tree, renderersMap, beautify = true) {
   }
 };
 
-function render$1 (content) {
-  let contentString = content
-    .map(context => context.get('content'))
-    .join('\n');
+function render$1(content) {
+  var contentString = content.map(function (context) {
+    return context.get('content');
+  }).join('\n');
 
-  return `
-    <div class="setup-root">
-      ${ contentString } 
-    </div>
-  `;
+  return '\n    <div class="setup-root">\n      ' + contentString + ' \n    </div>\n  ';
 }
 
 var playgrountSetupBody = {
   render: render$1
 };
 
-const {
-  DESCRIPTION_CONTEXT: DESCRIPTION_CONTEXT$3
-} = constants;
+var DESCRIPTION_CONTEXT$3 = constants.DESCRIPTION_CONTEXT;
 
-function filterInterlineDescriptions (tree, context, index) {
-  return context.get('type') !== DESCRIPTION_CONTEXT$3 ||
-    index === tree.size - 1;
+
+function filterInterlineDescriptions(tree, context, index) {
+  return context.get('type') !== DESCRIPTION_CONTEXT$3 || index === tree.size - 1;
 }
 
-function render$2 (tree = []) {
-  let contentString = tree
-    .filter((context, index) => filterInterlineDescriptions(tree, context, index))
-    .map(context => context.get('content'))
-    .join('');
+function render$2() {
+  var tree = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-  return `
-    <section class="bio">
-      ${contentString}
-    </section>
-  `;
+  var contentString = tree.filter(function (context, index) {
+    return filterInterlineDescriptions(tree, context, index);
+  }).map(function (context) {
+    return context.get('content');
+  }).join('');
+
+  return '\n    <section class="bio">\n      ' + contentString + '\n    </section>\n  ';
 }
 
 var bio$2 = {
   render: render$2
 };
 
-const { NEWLINE_LEXEME: NEWLINE_LEXEME$10 } = constants;
+var NEWLINE_LEXEME$10 = constants.NEWLINE_LEXEME;
 
-let typeRenderersMap = {
+
+var typeRenderersMap = {
   'name:': renderName,
   'occupation:': renderOccupation,
   'location:': renderLocation,
   'link:': renderLink
 };
 
-function renderName (name) {
-  return `
-    <h1 class="name">${name}</h1>
-  `;
+function renderName(name) {
+  return '\n    <h1 class="name">' + name + '</h1>\n  ';
 }
 
-function renderOccupation (occupation) {
-  return `
-    <div class="occupation">${occupation}</div>
-  `;
+function renderOccupation(occupation) {
+  return '\n    <div class="occupation">' + occupation + '</div>\n  ';
 }
 
-function renderLocation (location) {
-  return `
-    <div class="location">${location}</div>
-  `;
+function renderLocation(location) {
+  return '\n    <div class="location">' + location + '</div>\n  ';
 }
 
-function renderLink (url) {
-  let linkTitle = generateLinkTitle(url);
-  let linkHref = generateLinkHref(url);
+function renderLink(url) {
+  var linkTitle = generateLinkTitle(url);
+  var linkHref = generateLinkHref(url);
 
-  return `
-    <a class="link" href="${linkHref}">${linkTitle}</a>
-  `;
+  return '\n    <a class="link" href="' + linkHref + '">' + linkTitle + '</a>\n  ';
 }
 
-function sanitize$3 (content) {
-  return content.filter(lexeme => {
+function sanitize$3(content) {
+  return content.filter(function (lexeme) {
     return lexeme.get('type') !== NEWLINE_LEXEME$10;
   });
 }
 
-function generateLinkTitle (url = '') {
-  const TWITTER_PATTERN = /^https?:\/\/twitter\.com\/(@?.+)/;
+function generateLinkTitle() {
+  var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
-  let twitterLink = url.match(TWITTER_PATTERN);
+  var TWITTER_PATTERN = /^https?:\/\/twitter\.com\/(@?.+)/;
+
+  var twitterLink = url.match(TWITTER_PATTERN);
 
   if (twitterLink) {
-    return `@${twitterLink[1].replace(/^@/, '')}`;
+    return '@' + twitterLink[1].replace(/^@/, '');
   }
 
   return url;
 }
 
-function generateLinkHref (url = '') {
-  const EMAIL_PATTERN = /^[^/]+@.*\.\w*/;
+function generateLinkHref() {
+  var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
-  let emailLink = url.match(EMAIL_PATTERN);
+  var EMAIL_PATTERN = /^[^/]+@.*\.\w*/;
 
-  if (emailLink)  {
-    return `mailto:${emailLink[0]}`;
+  var emailLink = url.match(EMAIL_PATTERN);
+
+  if (emailLink) {
+    return 'mailto:' + emailLink[0];
   }
 
   return url;
 }
 
-
-function render$3 (content) {
+function render$3(content) {
   if (!content || !content.size) {
     return '';
   }
 
-  let sanitizedContent = sanitize$3(content);
-  let lineType =  sanitizedContent.first().get('content');
-  let typeRenderer = typeRenderersMap[lineType];
+  var sanitizedContent = sanitize$3(content);
+  var lineType = sanitizedContent.first().get('content');
+  var typeRenderer = typeRenderersMap[lineType];
 
   if (!typeRenderer || content.size < 2) {
     return '';
   }
 
-  let contentString = sanitizedContent
-    .slice(1)
-    .map(lexeme => lexeme.get('content'))
-    .join(' ');
+  var contentString = sanitizedContent.slice(1).map(function (lexeme) {
+    return lexeme.get('content');
+  }).join(' ');
 
   return typeRenderer(contentString);
 }
@@ -6007,184 +6038,166 @@ var bioLine = {
   render: render$3
 };
 
-function render$4 (tree = []) {
-  let contentString = tree
-    .map(context => context.get('content'))
-    .join('');
+function render$4() {
+  var tree = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-  return `
-    <section class="setup">
-      ${contentString}
-    </section>
-  `;
+  var contentString = tree.map(function (context) {
+    return context.get('content');
+  }).join('');
+
+  return '\n    <section class="setup">\n      ' + contentString + '\n    </section>\n  ';
 }
 
 var setup$2 = {
   render: render$4
 };
 
-function render$5 (tree = []) {
-  let contentString = tree
-    .map(context => context.get('content'))
-    .join('');
+function render$5() {
+  var tree = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-  return `
-    <article class="environment">
-      ${contentString}
-    </article>
-  `;
+  var contentString = tree.map(function (context) {
+    return context.get('content');
+  }).join('');
+
+  return '\n    <article class="environment">\n      ' + contentString + '\n    </article>\n  ';
 }
 
 var environment$2 = {
   render: render$5
 };
 
-const {
-  NEWLINE_TOKEN: NEWLINE_TOKEN$2
-} = constants;
+var NEWLINE_TOKEN$2 = constants.NEWLINE_TOKEN;
 
-function renderNewlines (contentString) {
-  return contentString.replace(new RegExp(`${ NEWLINE_TOKEN$2 }`, 'g'), '<br>');
+
+function renderNewlines(contentString) {
+  return contentString.replace(new RegExp('' + NEWLINE_TOKEN$2, 'g'), '<br>');
 }
 
-function renderInternals (contentString) {
-  let newlines = renderNewlines(contentString);
+function renderInternals(contentString) {
+  var newlines = renderNewlines(contentString);
 
   return newlines;
 }
 
-function getContentString (tree) {
-  let contentString = tree
-    .map(lexeme => lexeme.get('content'))
-    .join(' ')
-    .trim();
+function getContentString(tree) {
+  var contentString = tree.map(function (lexeme) {
+    return lexeme.get('content');
+  }).join(' ').trim();
 
   return renderInternals(contentString);
 }
 
-function render$6 (tree = []) {
-  let contentString = getContentString(tree);
+function render$6() {
+  var tree = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  var contentString = getContentString(tree);
 
   if (!contentString) {
     return '';
   }
 
-  return `
-    <div class="description">
-      ${ contentString }
-    </div>
-  `;
+  return '\n    <div class="description">\n      ' + contentString + '\n    </div>\n  ';
 }
 
 var description = {
   render: render$6
 };
 
-function render$7 (tree = []) {
-  let contentString = tree
-    .map(context => context.get('content'))
-    .join('');
+function render$7() {
+  var tree = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-  return `
-    <section class="environment-header">
-      ${contentString}
-    </section>
-  `;
+  var contentString = tree.map(function (context) {
+    return context.get('content');
+  }).join('');
+
+  return '\n    <section class="environment-header">\n      ' + contentString + '\n    </section>\n  ';
 }
 
 var environmentHeader$2 = {
   render: render$7
 };
 
-function render$8 (tree = []) {
-  let contentString = tree
-    .slice(1)
-    .map(context => context.get('content'))
-    .join(' ');
+function render$8() {
+  var tree = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-  return `
-    <h2 class="environment-title">${contentString}</h2>
-  `;
+  var contentString = tree.slice(1).map(function (context) {
+    return context.get('content');
+  }).join(' ');
+
+  return '\n    <h2 class="environment-title">' + contentString + '</h2>\n  ';
 }
 
 var environmentTitle = {
   render: render$8
 };
 
-function render$9 (content = []) {
-  let contentString = content
-    .map(context => context.get('content'))
-    .join('');
+function render$9() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-  return `
-    <section class="tools-list">
-      ${contentString}
-    </section>
-  `;
+  var contentString = content.map(function (context) {
+    return context.get('content');
+  }).join('');
+
+  return '\n    <section class="tools-list">\n      ' + contentString + '\n    </section>\n  ';
 }
 
 var toolsList$2 = {
   render: render$9
 };
 
-function render$10 (content = []) {
-  let contentString = content
-    .map(context => context.get('content'))
-    .join('\n');
+function render$10() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-  return `
-    <div class="tool-item">
-      ${contentString}
-    </div>
-  `;
+  var contentString = content.map(function (context) {
+    return context.get('content');
+  }).join('\n');
+
+  return '\n    <div class="tool-item">\n      ' + contentString + '\n    </div>\n  ';
 }
 
 var toolItem$2 = {
   render: render$10
 };
 
-function render$11 (content = []) {
-  let contentString = content
-    .map(context => context.get('content'))
-    .join('\n');
+function render$11() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-  return `
-    <div class="tool-head">
-      ${contentString}
-    </div>
-  `;
+  var contentString = content.map(function (context) {
+    return context.get('content');
+  }).join('\n');
+
+  return '\n    <div class="tool-head">\n      ' + contentString + '\n    </div>\n  ';
 }
 
 var toolHead$2 = {
   render: render$11
 };
 
-function render$12 (content = []) {
-  const separator = '<span class="tool-names-list-separator">,</span>';
+function render$12() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-  let contentString = content
-    .map(context => context.get('content'))
-    .join(separator);
+  var separator = '<span class="tool-names-list-separator">,</span>';
 
-  return `
-    <div class="tool-names-list">
-      ${contentString}
-    </div>
-  `;
+  var contentString = content.map(function (context) {
+    return context.get('content');
+  }).join(separator);
+
+  return '\n    <div class="tool-names-list">\n      ' + contentString + '\n    </div>\n  ';
 }
 
 var toolNamesList$2 = {
   render: render$12
 };
 
-const {
-  TOOL_TITLE_CONTEXT: TOOL_TITLE_CONTEXT$1,
-  TOOL_LINK_CONTEXT: TOOL_LINK_CONTEXT$1
-} = constants;
+var TOOL_TITLE_CONTEXT$1 = constants.TOOL_TITLE_CONTEXT;
+var TOOL_LINK_CONTEXT$1 = constants.TOOL_LINK_CONTEXT;
 
-function render$13 (content = []) {
-  let toolTitle = getToolTitle(content);
-  let toolUrl = getToolUrl(content);
+
+function render$13() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  var toolTitle = getToolTitle(content);
+  var toolUrl = getToolUrl(content);
 
   if (toolUrl) {
     return renderAsLink(toolTitle, toolUrl);
@@ -6193,8 +6206,8 @@ function render$13 (content = []) {
   }
 }
 
-function getToolTitle (content) {
-  let titleContext = content.find(context => {
+function getToolTitle(content) {
+  var titleContext = content.find(function (context) {
     return context.get('type') === TOOL_TITLE_CONTEXT$1;
   });
 
@@ -6205,8 +6218,8 @@ function getToolTitle (content) {
   return titleContext.get('content');
 }
 
-function getToolUrl (content) {
-  let linkContext = content.find(context => {
+function getToolUrl(content) {
+  var linkContext = content.find(function (context) {
     return context.get('type') === TOOL_LINK_CONTEXT$1;
   });
 
@@ -6217,88 +6230,77 @@ function getToolUrl (content) {
   return linkContext.get('content');
 }
 
-function renderAsLink (title, url) {
-  return `
-    <a class="tool-name" href="${url}">${title}</a>
-  `;
+function renderAsLink(title, url) {
+  return '\n    <a class="tool-name" href="' + url + '">' + title + '</a>\n  ';
 }
 
-function renderAsBlock (title) {
-  return `
-    <span class="tool-name" tabindex="0">${title}</span>
-  `;
+function renderAsBlock(title) {
+  return '\n    <span class="tool-name" tabindex="0">' + title + '</span>\n  ';
 }
 
 var toolName$2 = {
   render: render$13
 };
 
-function render$14 (content = []) {
-  return content
-    .map(context => context.get('content'))
-    .join(' ');
+function render$14() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  return content.map(function (context) {
+    return context.get('content');
+  }).join(' ');
 }
 
 var toolTitle = {
   render: render$14
 };
 
-function render$15 (content = []) {
-  return content
-    .map(context => context.get('content'))
-    .join('');
+function render$15() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  return content.map(function (context) {
+    return context.get('content');
+  }).join('');
 }
 
 var toolLink = {
   render: render$15
 };
 
-const {
-  BODY_RENDERER_KEY,
-  BIO_RENDERER_KEY,
-  BIO_LINE_RENDERER_KEY,
-  SETUP_RENDERER_KEY,
-  ENVIRONMENT_RENDERER_KEY,
-  DESCRIPTION_RENDERER_KEY,
-  ENVIRONMENT_HEADER_RENDERER_KEY,
-  ENVIRONMENT_TITLE_RENDERER_KEY,
-  TOOLS_LIST_RENDERER_KEY,
-  TOOL_ITEM_RENDERER_KEY,
-  TOOL_HEAD_RENDERER_KEY,
-  TOOL_NAMES_LIST_RENDERER_KEY,
-  TOOL_NAME_RENDERER_KEY,
-  TOOL_TITLE_RENDERER_KEY,
-  TOOL_LINK_RENDERER_KEY
-} = constants;
+var _renderersMap;
 
-const renderersMap = {
-  [BODY_RENDERER_KEY]: playgrountSetupBody,
-  [BIO_RENDERER_KEY]: bio$2,
-  [BIO_LINE_RENDERER_KEY]: bioLine,
-  [SETUP_RENDERER_KEY]: setup$2,
-  [ENVIRONMENT_RENDERER_KEY]: environment$2,
-  [DESCRIPTION_RENDERER_KEY]: description,
-  [ENVIRONMENT_HEADER_RENDERER_KEY]: environmentHeader$2,
-  [ENVIRONMENT_TITLE_RENDERER_KEY]: environmentTitle,
-  [TOOLS_LIST_RENDERER_KEY]: toolsList$2,
-  [TOOL_ITEM_RENDERER_KEY]: toolItem$2,
-  [TOOL_HEAD_RENDERER_KEY]: toolHead$2,
-  [TOOL_NAMES_LIST_RENDERER_KEY]: toolNamesList$2,
-  [TOOL_NAME_RENDERER_KEY]: toolName$2,
-  [TOOL_TITLE_RENDERER_KEY]: toolTitle,
-  [TOOL_LINK_RENDERER_KEY]: toolLink
-};
+var BODY_RENDERER_KEY = constants.BODY_RENDERER_KEY;
+var BIO_RENDERER_KEY = constants.BIO_RENDERER_KEY;
+var BIO_LINE_RENDERER_KEY = constants.BIO_LINE_RENDERER_KEY;
+var SETUP_RENDERER_KEY = constants.SETUP_RENDERER_KEY;
+var ENVIRONMENT_RENDERER_KEY = constants.ENVIRONMENT_RENDERER_KEY;
+var DESCRIPTION_RENDERER_KEY = constants.DESCRIPTION_RENDERER_KEY;
+var ENVIRONMENT_HEADER_RENDERER_KEY = constants.ENVIRONMENT_HEADER_RENDERER_KEY;
+var ENVIRONMENT_TITLE_RENDERER_KEY = constants.ENVIRONMENT_TITLE_RENDERER_KEY;
+var TOOLS_LIST_RENDERER_KEY = constants.TOOLS_LIST_RENDERER_KEY;
+var TOOL_ITEM_RENDERER_KEY = constants.TOOL_ITEM_RENDERER_KEY;
+var TOOL_HEAD_RENDERER_KEY = constants.TOOL_HEAD_RENDERER_KEY;
+var TOOL_NAMES_LIST_RENDERER_KEY = constants.TOOL_NAMES_LIST_RENDERER_KEY;
+var TOOL_NAME_RENDERER_KEY = constants.TOOL_NAME_RENDERER_KEY;
+var TOOL_TITLE_RENDERER_KEY = constants.TOOL_TITLE_RENDERER_KEY;
+var TOOL_LINK_RENDERER_KEY = constants.TOOL_LINK_RENDERER_KEY;
 
-var setupHtmlPlayground = function (tree = {}) {
+
+var renderersMap = (_renderersMap = {}, defineProperty(_renderersMap, BODY_RENDERER_KEY, playgrountSetupBody), defineProperty(_renderersMap, BIO_RENDERER_KEY, bio$2), defineProperty(_renderersMap, BIO_LINE_RENDERER_KEY, bioLine), defineProperty(_renderersMap, SETUP_RENDERER_KEY, setup$2), defineProperty(_renderersMap, ENVIRONMENT_RENDERER_KEY, environment$2), defineProperty(_renderersMap, DESCRIPTION_RENDERER_KEY, description), defineProperty(_renderersMap, ENVIRONMENT_HEADER_RENDERER_KEY, environmentHeader$2), defineProperty(_renderersMap, ENVIRONMENT_TITLE_RENDERER_KEY, environmentTitle), defineProperty(_renderersMap, TOOLS_LIST_RENDERER_KEY, toolsList$2), defineProperty(_renderersMap, TOOL_ITEM_RENDERER_KEY, toolItem$2), defineProperty(_renderersMap, TOOL_HEAD_RENDERER_KEY, toolHead$2), defineProperty(_renderersMap, TOOL_NAMES_LIST_RENDERER_KEY, toolNamesList$2), defineProperty(_renderersMap, TOOL_NAME_RENDERER_KEY, toolName$2), defineProperty(_renderersMap, TOOL_TITLE_RENDERER_KEY, toolTitle), defineProperty(_renderersMap, TOOL_LINK_RENDERER_KEY, toolLink), _renderersMap);
+
+var setupHtmlPlayground = function setupHtmlPlayground() {
+  var tree = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
   return render_1(tree, renderersMap, false);
 };
 
-const inputElement = document.querySelector('.input');
-const resultElement = document.querySelector('.result');
-const cheatsheetBody = document.querySelector('.cheatsheet');
-const cheatsheetTrigger = document.querySelector('.cheatsheet-trigger');
+var inputElement = document.querySelector('.input');
+var resultElement = document.querySelector('.result');
+var cheatsheetBody = document.querySelector('.cheatsheet');
+var cheatsheetTrigger = document.querySelector('.cheatsheet-trigger');
 
-inputElement.addEventListener('input', (event) => renderSetup(event.target.value));
+inputElement.addEventListener('input', function (event) {
+  return renderSetup(event.target.value);
+});
 
 cheatsheetTrigger.addEventListener('mouseenter', showCheatsheet);
 cheatsheetTrigger.addEventListener('focus', showCheatsheet);
@@ -6306,18 +6308,18 @@ cheatsheetTrigger.addEventListener('focus', showCheatsheet);
 cheatsheetTrigger.addEventListener('mouseleave', hideCheatsheet);
 cheatsheetTrigger.addEventListener('blur', hideCheatsheet);
 
-function renderSetup (content) {
-  let ast = setupAstPlayground(content);
-  let html = setupHtmlPlayground(ast);
+function renderSetup(content) {
+  var ast = setupAstPlayground(content);
+  var html = setupHtmlPlayground(ast);
 
   resultElement.innerHTML = html;
 }
 
-function showCheatsheet () {
+function showCheatsheet() {
   cheatsheetBody.classList.remove('hidden');
 }
 
-function hideCheatsheet () {
+function hideCheatsheet() {
   cheatsheetBody.classList.add('hidden');
 }
 
@@ -6325,9 +6327,7 @@ renderSetup(inputElement.value);
 
 inputElement.focus();
 
-var playground = {
-
-};
+var playground = {};
 
 return playground;
 
