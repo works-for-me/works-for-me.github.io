@@ -11928,6 +11928,10 @@ var DESCRIPTION_PARAGRAPH_CONTEXT = constants.DESCRIPTION_PARAGRAPH_CONTEXT;
 
 
 function isContextStart$10(tree, lexemeList, lexeme, index) {
+  if (index === 0 && lexeme.get('type') !== NEWLINE_LEXEME$10) {
+    return true;
+  }
+
   var prevLexeme = lexemeList.get(index - 1);
 
   return prevLexeme.get('type') === NEWLINE_LEXEME$10 && lexeme.get('type') !== NEWLINE_LEXEME$10;
