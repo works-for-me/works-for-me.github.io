@@ -11095,6 +11095,8 @@ var constants = {
   TOOL_NAMES_LIST_PARSER_KEY: 'parser-tool-names-list',
   TOOL_NAME_PARSER_KEY: 'parser-tool-name',
   DESCRIPTION_PARSER_KEY: 'parser-description',
+  DESCRIPTION_PARAGRAPH_PARSER_KEY: 'parser-description-paragraph',
+  DESCRIPTION_LINK_PARSER_KEY: 'parser-description-link',
   // renderer keys
   ROOT_RENDERER_KEY: 'renderer-root',
   HEAD_RENDERER_KEY: 'renderer-head',
@@ -11126,6 +11128,10 @@ var constants = {
   RSS_ITEM_PUB_DATE_RENDERER_KEY: 'renderer-rss-item-pub-date',
   RSS_ITEM_ID_RENDERER_KEY: 'renderer-rss-item-id',
   DESCRIPTION_PARAGRAPH_RENDERER_KEY: 'renderer-description-paragraph',
+  DESCRIPTION_TEXT_RENDERER_KEY: 'renderer-description-text',
+  DESCRIPTION_LINK_TITLE_RENDERER_KEY: 'renderer-description-link-title',
+  DESCRIPTION_LINK_URL_RENDERER_KEY: 'renderer-description-link-url',
+  DESCRIPTION_LINK_RENDERER_KEY: 'renderer-description-link',
   // context names
   ROOT_CONTEXT: 'root',
   HEAD_CONTEXT: 'head',
@@ -11169,6 +11175,10 @@ var constants = {
   RSS_ITEM_ID_CONTEXT: 'rss-item-id',
   RSS_ITEM_LINK_CONTEXT: 'rss-item-link',
   DESCRIPTION_PARAGRAPH_CONTEXT: 'description-paragraph',
+  DESCRIPTION_TEXT_CONTEXT: 'description-text',
+  DESCRIPTION_LINK_CONTEXT: 'description-link',
+  DESCRIPTION_LINK_TITLE_CONTEXT: 'description-link-title',
+  DESCRIPTION_LINK_URL_CONTEXT: 'description-link-url',
   // lexeme types
   ENV_BULLET_LEXEME: 'env-bullet',
   TOOL_BULLET_LEXEME: 'tool-bullet',
@@ -11866,7 +11876,7 @@ function isLinkEnd(content) {
 }
 
 function stripParentheses(content) {
-  var PATTERN = /(^\()|(\)$)/g;
+  var PATTERN = /^\(|\)$/g;
 
   return content.replace(PATTERN, '');
 }
@@ -11962,6 +11972,162 @@ var description = {
   appendTree: appendTree$10
 };
 
+var DESCRIPTION_TEXT_CONTEXT = constants.DESCRIPTION_TEXT_CONTEXT;
+var DESCRIPTION_LINK_CONTEXT = constants.DESCRIPTION_LINK_CONTEXT;
+
+
+function stripCorners(lexeme) {
+  var PATTERN = /^<|>$/g;
+
+  return lexeme.update('content', function (content) {
+    return content.replace(PATTERN, '');
+  });
+}
+
+function isLinkStart$1(lexeme) {
+  var PATTERN = /^</;
+
+  return PATTERN.test(lexeme.get('content'));
+}
+
+function isLinkEnd$1(lexeme) {
+  var PATTERN = />$/;
+
+  return PATTERN.test(lexeme.get('content'));
+}
+
+function isContextStart$11(tree, lexemeList, lexeme, index) {
+  if (index === 0) {
+    return true;
+  }
+
+  var currentContext = tree.get(tree.size - 1);
+  var prevLexeme = lexemeList.get(index - 1);
+
+  if (currentContext.get('type') === DESCRIPTION_LINK_CONTEXT) {
+    return isLinkEnd$1(prevLexeme);
+  } else {
+    return isLinkStart$1(lexeme);
+  }
+}
+
+function createContext$11(tree, lexemeList, lexeme, index) {
+  var linkStart = isLinkStart$1(lexeme);
+
+  if (linkStart) {
+    return immutable.fromJS({
+      type: DESCRIPTION_LINK_CONTEXT,
+      content: []
+    });
+  }
+
+  return immutable.fromJS({
+    type: DESCRIPTION_TEXT_CONTEXT,
+    content: []
+  });
+}
+
+function appendTree$11(tree, lexeme) {
+  var currentContext = tree.get(tree.size - 1);
+  var strippedLexeme = lexeme;
+
+  if (currentContext.get('type') === DESCRIPTION_LINK_CONTEXT) {
+    strippedLexeme = stripCorners(lexeme);
+  }
+
+  if (!strippedLexeme.get('content')) {
+    return tree;
+  }
+
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(strippedLexeme);
+    });
+  });
+}
+
+var descriptionParagraph = {
+  isContextStart: isContextStart$11,
+  createContext: createContext$11,
+  appendTree: appendTree$11
+};
+
+var DESCRIPTION_LINK_URL_CONTEXT = constants.DESCRIPTION_LINK_URL_CONTEXT;
+var DESCRIPTION_LINK_TITLE_CONTEXT = constants.DESCRIPTION_LINK_TITLE_CONTEXT;
+
+
+function isUrlStart(lexeme) {
+  var PATTERN = /^\(https?:\/\/.+?/;
+
+  return PATTERN.test(lexeme.get('content'));
+}
+
+function isUrlEnd(lexeme) {
+  var PATTERN = /\)$/;
+
+  return PATTERN.test(lexeme.get('content'));
+}
+
+function stripParentheses$1(lexeme) {
+  var PATTERN = /^\(|\)$/g;
+
+  return lexeme.update('content', function (content) {
+    return content.replace(PATTERN, '');
+  });
+}
+
+function isContextStart$12(tree, lexemeList, lexeme, index) {
+  if (index === 0) {
+    return true;
+  }
+
+  var currentContext = tree.get(tree.size - 1);
+  var prevLexeme = lexemeList.get(index - 1);
+
+  if (currentContext.get('type') === DESCRIPTION_LINK_URL_CONTEXT) {
+    return isUrlEnd(prevLexeme);
+  } else {
+    return isUrlStart(lexeme);
+  }
+}
+
+function createContext$12(tree, lexemeList, lexeme, index) {
+  var urlStart = isUrlStart(lexeme);
+
+  if (urlStart) {
+    return immutable.fromJS({
+      type: DESCRIPTION_LINK_URL_CONTEXT,
+      content: []
+    });
+  }
+
+  return immutable.fromJS({
+    type: DESCRIPTION_LINK_TITLE_CONTEXT,
+    content: []
+  });
+}
+
+function appendTree$12(tree, lexeme) {
+  var currentContext = tree.get(tree.size - 1);
+  var strippedLexeme = lexeme;
+
+  if (currentContext.get('type') === DESCRIPTION_LINK_URL_CONTEXT) {
+    strippedLexeme = stripParentheses$1(lexeme);
+  }
+
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(strippedLexeme);
+    });
+  });
+}
+
+var descriptionLink = {
+  isContextStart: isContextStart$12,
+  createContext: createContext$12,
+  appendTree: appendTree$12
+};
+
 var _parsersMap;
 
 var BODY_CONTEXT = constants.BODY_CONTEXT;
@@ -11976,9 +12142,11 @@ var TOOL_HEAD_PARSER_KEY = constants.TOOL_HEAD_PARSER_KEY;
 var TOOL_NAMES_LIST_PARSER_KEY = constants.TOOL_NAMES_LIST_PARSER_KEY;
 var TOOL_NAME_PARSER_KEY = constants.TOOL_NAME_PARSER_KEY;
 var DESCRIPTION_PARSER_KEY = constants.DESCRIPTION_PARSER_KEY;
+var DESCRIPTION_PARAGRAPH_PARSER_KEY = constants.DESCRIPTION_PARAGRAPH_PARSER_KEY;
+var DESCRIPTION_LINK_PARSER_KEY = constants.DESCRIPTION_LINK_PARSER_KEY;
 
 
-var parsersMap = (_parsersMap = {}, defineProperty$1(_parsersMap, BODY_PARSER_KEY, body), defineProperty$1(_parsersMap, BIO_PARSER_KEY, bio), defineProperty$1(_parsersMap, SETUP_PARSER_KEY, setup), defineProperty$1(_parsersMap, ENVIRONMENT_PARSER_KEY, environment), defineProperty$1(_parsersMap, ENVIRONMENT_HEADER_PARSER_KEY, environmentHeader), defineProperty$1(_parsersMap, TOOLS_LIST_PARSER_KEY, toolsList), defineProperty$1(_parsersMap, TOOL_ITEM_PARSER_KEY, toolItem), defineProperty$1(_parsersMap, TOOL_HEAD_PARSER_KEY, toolHead), defineProperty$1(_parsersMap, TOOL_NAMES_LIST_PARSER_KEY, toolNamesList), defineProperty$1(_parsersMap, TOOL_NAME_PARSER_KEY, toolName), defineProperty$1(_parsersMap, DESCRIPTION_PARSER_KEY, description), _parsersMap);
+var parsersMap = (_parsersMap = {}, defineProperty$1(_parsersMap, BODY_PARSER_KEY, body), defineProperty$1(_parsersMap, BIO_PARSER_KEY, bio), defineProperty$1(_parsersMap, SETUP_PARSER_KEY, setup), defineProperty$1(_parsersMap, ENVIRONMENT_PARSER_KEY, environment), defineProperty$1(_parsersMap, ENVIRONMENT_HEADER_PARSER_KEY, environmentHeader), defineProperty$1(_parsersMap, TOOLS_LIST_PARSER_KEY, toolsList), defineProperty$1(_parsersMap, TOOL_ITEM_PARSER_KEY, toolItem), defineProperty$1(_parsersMap, TOOL_HEAD_PARSER_KEY, toolHead), defineProperty$1(_parsersMap, TOOL_NAMES_LIST_PARSER_KEY, toolNamesList), defineProperty$1(_parsersMap, TOOL_NAME_PARSER_KEY, toolName), defineProperty$1(_parsersMap, DESCRIPTION_PARSER_KEY, description), defineProperty$1(_parsersMap, DESCRIPTION_PARAGRAPH_PARSER_KEY, descriptionParagraph), defineProperty$1(_parsersMap, DESCRIPTION_LINK_PARSER_KEY, descriptionLink), _parsersMap);
 
 var setupAstPlayground = function setupAstPlayground() {
   var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
@@ -12385,8 +12553,113 @@ function render$16() {
   return '\n    <p class="description-paragraph">\n      ' + contentString + '\n    </p>\n  ';
 }
 
-var descriptionParagraph = {
+var descriptionParagraph$2 = {
   render: render$16
+};
+
+var DESCRIPTION_LINK_TITLE_CONTEXT$1 = constants.DESCRIPTION_LINK_TITLE_CONTEXT;
+var DESCRIPTION_LINK_URL_CONTEXT$1 = constants.DESCRIPTION_LINK_URL_CONTEXT;
+
+
+function render$17() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : immutable.List();
+
+  if (content.size === 0) {
+    return '';
+  }
+
+  var toolTitle = getLinkTitle(content);
+  var toolUrl = getLinkUrl(content);
+
+  if (toolUrl) {
+    return renderAsLink$1(toolTitle, toolUrl);
+  } else {
+    return renderAsBlock$1(toolTitle);
+  }
+}
+
+function getLinkTitle(content) {
+  var titleContext = content.find(function (context) {
+    return context.get('type') === DESCRIPTION_LINK_TITLE_CONTEXT$1;
+  });
+
+  if (!titleContext) {
+    return '';
+  }
+
+  return titleContext.get('content');
+}
+
+function getLinkUrl(content) {
+  var linkContext = content.find(function (context) {
+    return context.get('type') === DESCRIPTION_LINK_URL_CONTEXT$1;
+  });
+
+  if (!linkContext) {
+    return;
+  }
+
+  return linkContext.get('content');
+}
+
+function renderAsLink$1(title, url) {
+  return '\n    <a class="description-link" href="' + url + '">' + title + '</a>\n  ';
+}
+
+function renderAsBlock$1(title) {
+  return '\n    <span class="description-link" tabindex="0">' + title + '</span>\n  ';
+}
+
+var descriptionLink$2 = {
+  render: render$17
+};
+
+function render$18() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  var contentString = content.map(function (context) {
+    return context.get('content');
+  }).join(' ');
+
+  if (!contentString) {
+    return '';
+  }
+
+  return contentString;
+}
+
+var descriptionLinkTitle = {
+  render: render$18
+};
+
+function render$19() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  var contentString = content.map(function (context) {
+    return context.get('content');
+  }).join('');
+
+  if (!contentString) {
+    return '';
+  }
+
+  return contentString;
+}
+
+var descriptionLinkUrl = {
+  render: render$19
+};
+
+function render$20() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  return content.map(function (context) {
+    return context.get('content');
+  }).join(' ');
+}
+
+var descriptionText = {
+  render: render$20
 };
 
 var _renderersMap;
@@ -12407,9 +12680,13 @@ var TOOL_NAME_RENDERER_KEY = constants.TOOL_NAME_RENDERER_KEY;
 var TOOL_TITLE_RENDERER_KEY = constants.TOOL_TITLE_RENDERER_KEY;
 var TOOL_LINK_RENDERER_KEY = constants.TOOL_LINK_RENDERER_KEY;
 var DESCRIPTION_PARAGRAPH_RENDERER_KEY = constants.DESCRIPTION_PARAGRAPH_RENDERER_KEY;
+var DESCRIPTION_LINK_RENDERER_KEY = constants.DESCRIPTION_LINK_RENDERER_KEY;
+var DESCRIPTION_LINK_TITLE_RENDERER_KEY = constants.DESCRIPTION_LINK_TITLE_RENDERER_KEY;
+var DESCRIPTION_LINK_URL_RENDERER_KEY = constants.DESCRIPTION_LINK_URL_RENDERER_KEY;
+var DESCRIPTION_TEXT_RENDERER_KEY = constants.DESCRIPTION_TEXT_RENDERER_KEY;
 
 
-var renderersMap = (_renderersMap = {}, defineProperty$1(_renderersMap, BODY_RENDERER_KEY, playgrountSetupBody), defineProperty$1(_renderersMap, BIO_RENDERER_KEY, bio$2), defineProperty$1(_renderersMap, BIO_LINE_RENDERER_KEY, bioLine), defineProperty$1(_renderersMap, SETUP_RENDERER_KEY, setup$2), defineProperty$1(_renderersMap, ENVIRONMENT_RENDERER_KEY, environment$2), defineProperty$1(_renderersMap, DESCRIPTION_RENDERER_KEY, description$2), defineProperty$1(_renderersMap, ENVIRONMENT_HEADER_RENDERER_KEY, environmentHeader$2), defineProperty$1(_renderersMap, ENVIRONMENT_TITLE_RENDERER_KEY, environmentTitle), defineProperty$1(_renderersMap, TOOLS_LIST_RENDERER_KEY, toolsList$2), defineProperty$1(_renderersMap, TOOL_ITEM_RENDERER_KEY, toolItem$2), defineProperty$1(_renderersMap, TOOL_HEAD_RENDERER_KEY, toolHead$2), defineProperty$1(_renderersMap, TOOL_NAMES_LIST_RENDERER_KEY, toolNamesList$2), defineProperty$1(_renderersMap, TOOL_NAME_RENDERER_KEY, toolName$2), defineProperty$1(_renderersMap, TOOL_TITLE_RENDERER_KEY, toolTitle), defineProperty$1(_renderersMap, TOOL_LINK_RENDERER_KEY, toolLink), defineProperty$1(_renderersMap, DESCRIPTION_PARAGRAPH_RENDERER_KEY, descriptionParagraph), _renderersMap);
+var renderersMap = (_renderersMap = {}, defineProperty$1(_renderersMap, BODY_RENDERER_KEY, playgrountSetupBody), defineProperty$1(_renderersMap, BIO_RENDERER_KEY, bio$2), defineProperty$1(_renderersMap, BIO_LINE_RENDERER_KEY, bioLine), defineProperty$1(_renderersMap, SETUP_RENDERER_KEY, setup$2), defineProperty$1(_renderersMap, ENVIRONMENT_RENDERER_KEY, environment$2), defineProperty$1(_renderersMap, DESCRIPTION_RENDERER_KEY, description$2), defineProperty$1(_renderersMap, ENVIRONMENT_HEADER_RENDERER_KEY, environmentHeader$2), defineProperty$1(_renderersMap, ENVIRONMENT_TITLE_RENDERER_KEY, environmentTitle), defineProperty$1(_renderersMap, TOOLS_LIST_RENDERER_KEY, toolsList$2), defineProperty$1(_renderersMap, TOOL_ITEM_RENDERER_KEY, toolItem$2), defineProperty$1(_renderersMap, TOOL_HEAD_RENDERER_KEY, toolHead$2), defineProperty$1(_renderersMap, TOOL_NAMES_LIST_RENDERER_KEY, toolNamesList$2), defineProperty$1(_renderersMap, TOOL_NAME_RENDERER_KEY, toolName$2), defineProperty$1(_renderersMap, TOOL_TITLE_RENDERER_KEY, toolTitle), defineProperty$1(_renderersMap, TOOL_LINK_RENDERER_KEY, toolLink), defineProperty$1(_renderersMap, DESCRIPTION_PARAGRAPH_RENDERER_KEY, descriptionParagraph$2), defineProperty$1(_renderersMap, DESCRIPTION_LINK_RENDERER_KEY, descriptionLink$2), defineProperty$1(_renderersMap, DESCRIPTION_LINK_TITLE_RENDERER_KEY, descriptionLinkTitle), defineProperty$1(_renderersMap, DESCRIPTION_LINK_URL_RENDERER_KEY, descriptionLinkUrl), defineProperty$1(_renderersMap, DESCRIPTION_TEXT_RENDERER_KEY, descriptionText), _renderersMap);
 
 var setupHtmlPlayground = function setupHtmlPlayground() {
   var tree = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
