@@ -3,88 +3,210 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="icon" href="../statics/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" href="../statics/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" href="../statics/favicon-48x48.png" sizes="48x48">
+    <link rel="icon" href="../statics/favicon-180x180.png" sizes="180x180">
+
+    <link rel="stylesheet" href="../statics/global.css" type="text/css">
+    <link rel="stylesheet" href="../statics/header.css" type="text/css">
     <link rel="stylesheet" href="../statics/setup.css" type="text/css">
     <link rel="stylesheet" href="./playground.css" type="text/css">
 
     <script defer src="./playground.bundle.js" type="text/javascript"></script>
   </head>
   <body>
+    <header class="header">
+      <a href="../index.html" class="logo inline">
+        Works for me
+      </a>
+      <a href="../index.html" class="logo">
+        Works<br/>
+        for<br/>
+        me
+      </a>
+      <nav class="navigation">
+        <span
+          class="navigation-item current"
+        >Playground</span>
+
+        <a
+          href="../rss.xml"
+          class="navigation-item"
+        >RSS</a>
+
+        <a
+          href="https://github.com/nik-garmash/works-for-me"
+          class="navigation-item"
+        >GitHub</a>
+
+        <a
+          href="https://github.com/nik-garmash/works-for-me#how-to-add-my-setup"
+          class="navigation-item highlight"
+        >How To: Add your setup</a>
+      </nav>
+
+      <div class="controls">
+        <div class="upload-images">
+          <input type="file" multiple class="upload-images__input"/>
+          <div class="upload-images__title">
+            Upload Images&hellip;
+          </div>
+        </div>
+        <button class="images-trigger" disabled>
+          <span class="images-trigger-title">Images</span>
+        </button>
+        <button class="cheatsheet-trigger">
+          <span class="cheatsheet-trigger-title">Cheatsheet</span>
+        </button>
+      </div>
+    </header>
+
     <div class="playground">
+      <div class="sheet-backdrop hidden"></div>
+
+      <div class="images hidden">
+        <div class="images__list"></div>
+      </div>
+
       <div class="cheatsheet hidden">
-        <div class="bio-cheat">
-          <div class="cheat-title">
+        <div class="cheatsheet__item bio-cheat">
+          <div class="cheatsheet__title">
             Author's info
           </div>
 
-          <div class="cheat-example">
-            <div class="cheat-example-body">
-              name: <span class="example-data">John Doe</span><br>
-              occupation: <span class="example-data">Designer</span><br>
-              location: <span class="example-data">Berlin, Germany</span><br>
-              link: <span class="example-data">https://twitter.com/johndoe</span><br>
-              link: <span class="example-data">https://johns-blog.com</span>
+          <div class="cheatsheet__example">
+            <div class="cheatsheet__example-body">
+              <span class="cheatsheet__example-syntax">name:</span>
+              <span class="cheatsheet__example-data">John Doe</span><br>
+
+              <span class="cheatsheet__example-syntax">occupation:</span>
+              <span class="cheatsheet__example-data">Designer</span><br>
+
+              <span class="cheatsheet__example-syntax">location:</span>
+              <span class="cheatsheet__example-data">Berlin, Germany</span><br>
+
+              <span class="cheatsheet__example-syntax">link:</span>
+              <span class="cheatsheet__example-data">https://twitter.com/johndoe</span><br>
+
+              <span class="cheatsheet__example-syntax">link:</span>
+              <span class="cheatsheet__example-data">https://johns-blog.com</span><br>
+              <br>
+              <span class="cheatsheet__example-data">Optional description goes here&hellip;</span>
             </div>
           </div>
         </div>
 
-        <div class="context-cheat">
-          <div class="cheat-title">
-            Optional grouping title
-          </div>
-
-          <div class="cheat-example">
-            <div class="cheat-example-body">
-              -- <span class="example-data">Programming</span>
-            </div>
-          </div>
-
-          <div class="cheat-example">
-            <div class="cheat-example-body">
-              -- <span class="example-data">Video editing</span>
-            </div>
-          </div>
-
-          <div class="cheat-example">
-            <div class="cheat-example-title">
-              with a description
-            </div>
-
-            <div class="cheat-example-body">
-              -- <span class="example-data">On my phone</span><br>
-              <span class="example-data">My phone is...</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="tool-cheat">
-          <div class="cheat-title">
+        <div class="cheatsheet__item tool-cheat">
+          <div class="cheatsheet__title">
             Tool
           </div>
 
-          <div class="cheat-example">
-            <div class="cheat-example-body">
-              > <span class="example-data">WebStorm (https://www.jetbrains.com/webstorm/)</span>
+          <div class="cheatsheet__example">
+            <div class="cheatsheet__example-body">
+              <span class="cheatsheet__example-syntax">></span>
+              <span class="cheatsheet__example-data">Sketch</span>
+              <span class="cheatsheet__example-syntax">(</span><!--
+              --><span class="cheatsheet__example-data">https://www.sketchapp.com</span><!--
+              --><span class="cheatsheet__example-syntax">)</span>
             </div>
           </div>
 
-          <div class="cheat-example">
-            <div class="cheat-example-title">
+          <div class="cheatsheet__example">
+            <div class="cheatsheet__example-title">
               with a description
             </div>
 
-            <div class="cheat-example-body">
-              > <span class="example-data">Sketch</span><br>
-              <span class="example-data">Couple of useful plugins...</span>
+            <div class="cheatsheet__example-body">
+              <span class="cheatsheet__example-syntax">></span>
+              <span class="cheatsheet__example-data">WebStorm</span><br>
+              <br>
+              <span class="cheatsheet__example-data">Couple of useful plugins...</span>
             </div>
           </div>
 
-          <div class="cheat-example">
-            <div class="cheat-example-title">
+          <div class="cheatsheet__example">
+            <div class="cheatsheet__example-title">
               inline similar tools
             </div>
 
-            <div class="cheat-example-body">
-              > <span class="example-data">Telegram (https://telegram.org/), Slack</span>
+            <div class="cheatsheet__example-body">
+              <span class="cheatsheet__example-syntax">></span>
+              <span class="cheatsheet__example-data">Telegram, Slack</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cheatsheet__item context-cheat">
+          <div class="cheatsheet__title">
+            Optional grouping title
+          </div>
+
+          <div class="cheatsheet__example">
+            <div class="cheatsheet__example-body">
+              <span class="cheatsheet__example-syntax">--</span>
+              <span class="cheatsheet__example-data">Programming</span>
+            </div>
+          </div>
+
+          <div class="cheatsheet__example">
+            <div class="cheatsheet__example-body">
+              <span class="cheatsheet__example-syntax">--</span>
+              <span class="cheatsheet__example-data">Video editing</span>
+            </div>
+          </div>
+
+          <div class="cheatsheet__example">
+            <div class="cheatsheet__example-title">
+              with a description
+            </div>
+
+            <div class="cheatsheet__example-body">
+              <span class="cheatsheet__example-syntax">--</span>
+              <span class="cheatsheet__example-data">On my phone</span><br>
+              <br>
+              <span class="cheatsheet__example-data">My phone is...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cheatsheet__item links-cheat">
+          <div class="cheatsheet__title">
+            Links
+          </div>
+
+          <div class="cheatsheet__example">
+            <div class="cheatsheet__example-title">
+              within any description
+            </div>
+
+            <div class="cheatsheet__example-body">
+              <span class="cheatsheet__example-syntax"><</span><!--
+              --><span class="cheatsheet__example-data">My dotfiles</span>
+              <span class="cheatsheet__example-syntax">(</span><!--
+              --><span class="cheatsheet__example-data">https://git.io/vHSaX</span><!--
+              --><span class="cheatsheet__example-syntax">)</span><!--
+              --><span class="cheatsheet__example-syntax">></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cheatsheet__item images-cheat">
+          <div class="cheatsheet__title">
+            Images
+          </div>
+
+          <div class="cheatsheet__example">
+            <div class="cheatsheet__example-title">
+              placed on separate line
+            </div>
+
+            <div class="cheatsheet__example-body">
+              <span class="cheatsheet__example-syntax">#</span>
+              <span class="cheatsheet__example-data">Desktop photo</span>
+              <span class="cheatsheet__example-syntax">(</span><!--
+              --><span class="cheatsheet__example-data">./my-desktop.jpg</span><!--
+              --><span class="cheatsheet__example-syntax">)</span>
             </div>
           </div>
         </div>
@@ -93,31 +215,24 @@
 
       <div class="setup-area">
         <div class="editor">
-          <textarea class="input">
-name: John 😎 Doe
-occupation: Rocket Scientist
-link: https://en.wikipedia.org/wiki/John_Doe
-
-> emacs
-
-Any other software does not make any sense...</textarea>
-
-          <div class="controls">
-            <button class="cheatsheet-trigger">
-              <span class="cheatsheet-trigger-title">Cheatsheet</span>
-            </button>
-          </div>
+          <textarea class="input"></textarea>
         </div>
-
         <div class="result"></div>
       </div>
     </div>
 
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
       ga('create', 'UA-100562395-1', 'auto');
       ga('send', 'pageview');

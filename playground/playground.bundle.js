@@ -11097,6 +11097,7 @@ var constants = {
   DESCRIPTION_PARSER_KEY: 'parser-description',
   DESCRIPTION_PARAGRAPH_PARSER_KEY: 'parser-description-paragraph',
   DESCRIPTION_LINK_PARSER_KEY: 'parser-description-link',
+  IMAGE_PARSER_KEY: 'parser-image',
   // renderer keys
   ROOT_RENDERER_KEY: 'renderer-root',
   HEAD_RENDERER_KEY: 'renderer-head',
@@ -11132,6 +11133,9 @@ var constants = {
   DESCRIPTION_LINK_TITLE_RENDERER_KEY: 'renderer-description-link-title',
   DESCRIPTION_LINK_URL_RENDERER_KEY: 'renderer-description-link-url',
   DESCRIPTION_LINK_RENDERER_KEY: 'renderer-description-link',
+  IMAGE_TITLE_RENDERER_KEY: 'renderer-image-title',
+  IMAGE_URL_RENDERER_KEY: 'renderer-image-url',
+  IMAGE_RENDERER_KEY: 'renderer-image',
   // context names
   ROOT_CONTEXT: 'root',
   HEAD_CONTEXT: 'head',
@@ -11179,16 +11183,21 @@ var constants = {
   DESCRIPTION_LINK_CONTEXT: 'description-link',
   DESCRIPTION_LINK_TITLE_CONTEXT: 'description-link-title',
   DESCRIPTION_LINK_URL_CONTEXT: 'description-link-url',
+  IMAGE_CONTEXT: 'image',
+  IMAGE_TITLE_CONTEXT: 'image-title',
+  IMAGE_URL_CONTEXT: 'image-url',
   // lexeme types
   ENV_BULLET_LEXEME: 'env-bullet',
   TOOL_BULLET_LEXEME: 'tool-bullet',
   NEWLINE_LEXEME: 'newline',
   WORD_LEXEME: 'word',
   COMMENT_BULLET_LEXEME: 'comment-bullet',
+  IMAGE_BULLET_LEXEME: 'image-bullet',
   // special tokens
   TOOL_BULLET_TOKEN: '>',
   ENV_BULLET_TOKEN: '--',
   COMMENT_BULLET_TOKEN: '//',
+  IMAGE_BULLET_TOKEN: '#',
   NEWLINE_TOKEN: '\n',
   RETURN_NEWLINE_TOKEN: '\r\n',
   SPACE_TOKEN: ' ',
@@ -11302,11 +11311,13 @@ var ENV_BULLET_TOKEN = constants.ENV_BULLET_TOKEN;
 var COMMENT_BULLET_TOKEN = constants.COMMENT_BULLET_TOKEN;
 var NEWLINE_TOKEN$1 = constants.NEWLINE_TOKEN;
 var RETURN_NEWLINE_TOKEN$1 = constants.RETURN_NEWLINE_TOKEN;
+var IMAGE_BULLET_TOKEN = constants.IMAGE_BULLET_TOKEN;
 var TOOL_BULLET_LEXEME = constants.TOOL_BULLET_LEXEME;
 var ENV_BULLET_LEXEME = constants.ENV_BULLET_LEXEME;
 var COMMENT_BULLET_LEXEME = constants.COMMENT_BULLET_LEXEME;
 var NEWLINE_LEXEME = constants.NEWLINE_LEXEME;
 var WORD_LEXEME = constants.WORD_LEXEME;
+var IMAGE_BULLET_LEXEME = constants.IMAGE_BULLET_LEXEME;
 
 
 var toolBullet = function toolBullet(content) {
@@ -11318,6 +11329,9 @@ var envBullet = function envBullet(content) {
 var commentBullet = function commentBullet(content) {
   return { type: COMMENT_BULLET_LEXEME, content: content };
 };
+var imageBullet = function imageBullet(content) {
+  return { type: IMAGE_BULLET_LEXEME, content: content };
+};
 var newline = function newline(content) {
   return { type: NEWLINE_LEXEME, content: content };
 };
@@ -11325,7 +11339,7 @@ var word = function word(content) {
   return { type: WORD_LEXEME, content: content };
 };
 
-var lexemesMap = (_lexemesMap = {}, defineProperty$1(_lexemesMap, TOOL_BULLET_TOKEN, toolBullet), defineProperty$1(_lexemesMap, ENV_BULLET_TOKEN, envBullet), defineProperty$1(_lexemesMap, COMMENT_BULLET_TOKEN, commentBullet), defineProperty$1(_lexemesMap, NEWLINE_TOKEN$1, newline), defineProperty$1(_lexemesMap, RETURN_NEWLINE_TOKEN$1, newline), defineProperty$1(_lexemesMap, 'word', word), _lexemesMap);
+var lexemesMap = (_lexemesMap = {}, defineProperty$1(_lexemesMap, TOOL_BULLET_TOKEN, toolBullet), defineProperty$1(_lexemesMap, ENV_BULLET_TOKEN, envBullet), defineProperty$1(_lexemesMap, COMMENT_BULLET_TOKEN, commentBullet), defineProperty$1(_lexemesMap, IMAGE_BULLET_TOKEN, imageBullet), defineProperty$1(_lexemesMap, NEWLINE_TOKEN$1, newline), defineProperty$1(_lexemesMap, RETURN_NEWLINE_TOKEN$1, newline), defineProperty$1(_lexemesMap, 'word', word), _lexemesMap);
 
 var lex = function lex(tokens) {
   var lexemes = tokens.map(function (token) {
@@ -11935,6 +11949,8 @@ var toolName = {
 
 var NEWLINE_LEXEME$10 = constants.NEWLINE_LEXEME;
 var DESCRIPTION_PARAGRAPH_CONTEXT = constants.DESCRIPTION_PARAGRAPH_CONTEXT;
+var IMAGE_CONTEXT = constants.IMAGE_CONTEXT;
+var IMAGE_BULLET_LEXEME$1 = constants.IMAGE_BULLET_LEXEME;
 
 
 function isContextStart$10(tree, lexemeList, lexeme, index) {
@@ -11948,6 +11964,13 @@ function isContextStart$10(tree, lexemeList, lexeme, index) {
 }
 
 function createContext$10(tree, lexemeList, lexeme, index) {
+  if (lexeme.get('type') === IMAGE_BULLET_LEXEME$1) {
+    return immutable.fromJS({
+      type: IMAGE_CONTEXT,
+      content: []
+    });
+  }
+
   return immutable.fromJS({
     type: DESCRIPTION_PARAGRAPH_CONTEXT,
     content: []
@@ -11955,7 +11978,13 @@ function createContext$10(tree, lexemeList, lexeme, index) {
 }
 
 function appendTree$10(tree, lexeme) {
+  var currentContext = tree.get(tree.size - 1);
+
   if (lexeme.get('type') === NEWLINE_LEXEME$10) {
+    return tree;
+  }
+
+  if (currentContext.get('type') === IMAGE_CONTEXT && currentContext.get('content').size === 0 && lexeme.get('type') === IMAGE_BULLET_LEXEME$1) {
     return tree;
   }
 
@@ -12128,6 +12157,85 @@ var descriptionLink = {
   appendTree: appendTree$12
 };
 
+var IMAGE_TITLE_CONTEXT = constants.IMAGE_TITLE_CONTEXT;
+var IMAGE_URL_CONTEXT = constants.IMAGE_URL_CONTEXT;
+
+
+function isUrlStart$1(lexeme) {
+  var EXTERNAL_PATTERN = /^\(https?:\/\/.+?/;
+  var LOCAL_PATTERN = /^\(\.\/.+?/;
+
+  var content = lexeme.get('content');
+
+  return EXTERNAL_PATTERN.test(content) || LOCAL_PATTERN.test(content);
+}
+
+function isUrlEnd$1(lexeme) {
+  var PATTERN = /\)$/;
+
+  return PATTERN.test(lexeme.get('content'));
+}
+
+function stripParentheses$2(lexeme) {
+  var PATTERN = /^\(|\)$/g;
+
+  return lexeme.update('content', function (content) {
+    return content.replace(PATTERN, '');
+  });
+}
+
+function isContextStart$13(tree, lexemeList, lexeme, index) {
+  if (index === 0) {
+    return true;
+  }
+
+  var currentContext = tree.get(tree.size - 1);
+  var prevLexeme = lexemeList.get(index - 1);
+
+  if (currentContext.get('type') === IMAGE_URL_CONTEXT) {
+    return isUrlEnd$1(prevLexeme);
+  } else {
+    return isUrlStart$1(lexeme);
+  }
+}
+
+function createContext$13(tree, lexemeList, lexeme, index) {
+  var urlStart = isUrlStart$1(lexeme);
+
+  if (urlStart) {
+    return immutable.fromJS({
+      type: IMAGE_URL_CONTEXT,
+      content: []
+    });
+  }
+
+  return immutable.fromJS({
+    type: IMAGE_TITLE_CONTEXT,
+    content: []
+  });
+}
+
+function appendTree$13(tree, lexeme) {
+  var currentContext = tree.get(tree.size - 1);
+  var strippedLexeme = lexeme;
+
+  if (currentContext.get('type') === IMAGE_URL_CONTEXT) {
+    strippedLexeme = stripParentheses$2(lexeme);
+  }
+
+  return tree.update(tree.size - 1, function (context) {
+    return context.update('content', function (content) {
+      return content.push(strippedLexeme);
+    });
+  });
+}
+
+var image = {
+  isContextStart: isContextStart$13,
+  createContext: createContext$13,
+  appendTree: appendTree$13
+};
+
 var _parsersMap;
 
 var BODY_CONTEXT = constants.BODY_CONTEXT;
@@ -12144,9 +12252,10 @@ var TOOL_NAME_PARSER_KEY = constants.TOOL_NAME_PARSER_KEY;
 var DESCRIPTION_PARSER_KEY = constants.DESCRIPTION_PARSER_KEY;
 var DESCRIPTION_PARAGRAPH_PARSER_KEY = constants.DESCRIPTION_PARAGRAPH_PARSER_KEY;
 var DESCRIPTION_LINK_PARSER_KEY = constants.DESCRIPTION_LINK_PARSER_KEY;
+var IMAGE_PARSER_KEY = constants.IMAGE_PARSER_KEY;
 
 
-var parsersMap = (_parsersMap = {}, defineProperty$1(_parsersMap, BODY_PARSER_KEY, body), defineProperty$1(_parsersMap, BIO_PARSER_KEY, bio), defineProperty$1(_parsersMap, SETUP_PARSER_KEY, setup), defineProperty$1(_parsersMap, ENVIRONMENT_PARSER_KEY, environment), defineProperty$1(_parsersMap, ENVIRONMENT_HEADER_PARSER_KEY, environmentHeader), defineProperty$1(_parsersMap, TOOLS_LIST_PARSER_KEY, toolsList), defineProperty$1(_parsersMap, TOOL_ITEM_PARSER_KEY, toolItem), defineProperty$1(_parsersMap, TOOL_HEAD_PARSER_KEY, toolHead), defineProperty$1(_parsersMap, TOOL_NAMES_LIST_PARSER_KEY, toolNamesList), defineProperty$1(_parsersMap, TOOL_NAME_PARSER_KEY, toolName), defineProperty$1(_parsersMap, DESCRIPTION_PARSER_KEY, description), defineProperty$1(_parsersMap, DESCRIPTION_PARAGRAPH_PARSER_KEY, descriptionParagraph), defineProperty$1(_parsersMap, DESCRIPTION_LINK_PARSER_KEY, descriptionLink), _parsersMap);
+var parsersMap = (_parsersMap = {}, defineProperty$1(_parsersMap, BODY_PARSER_KEY, body), defineProperty$1(_parsersMap, BIO_PARSER_KEY, bio), defineProperty$1(_parsersMap, SETUP_PARSER_KEY, setup), defineProperty$1(_parsersMap, ENVIRONMENT_PARSER_KEY, environment), defineProperty$1(_parsersMap, ENVIRONMENT_HEADER_PARSER_KEY, environmentHeader), defineProperty$1(_parsersMap, TOOLS_LIST_PARSER_KEY, toolsList), defineProperty$1(_parsersMap, TOOL_ITEM_PARSER_KEY, toolItem), defineProperty$1(_parsersMap, TOOL_HEAD_PARSER_KEY, toolHead), defineProperty$1(_parsersMap, TOOL_NAMES_LIST_PARSER_KEY, toolNamesList), defineProperty$1(_parsersMap, TOOL_NAME_PARSER_KEY, toolName), defineProperty$1(_parsersMap, DESCRIPTION_PARSER_KEY, description), defineProperty$1(_parsersMap, DESCRIPTION_PARAGRAPH_PARSER_KEY, descriptionParagraph), defineProperty$1(_parsersMap, DESCRIPTION_LINK_PARSER_KEY, descriptionLink), defineProperty$1(_parsersMap, IMAGE_PARSER_KEY, image), _parsersMap);
 
 var setupAstPlayground = function setupAstPlayground() {
   var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
@@ -12223,20 +12332,41 @@ var playgrountSetupBody = {
 var DESCRIPTION_CONTEXT$3 = constants.DESCRIPTION_CONTEXT;
 
 
-function filterInterlineDescriptions(tree, context, index) {
-  return context.get('type') !== DESCRIPTION_CONTEXT$3 || index === tree.size - 1;
+function filterInterlineDescriptions(content) {
+  return content.filter(function (context, index) {
+    return context.get('type') !== DESCRIPTION_CONTEXT$3 || index === content.size - 1;
+  });
+}
+
+function findBioContexts(content) {
+  return content.filter(function (context) {
+    return context.get('type') !== DESCRIPTION_CONTEXT$3;
+  });
+}
+
+function findDescriptions(content) {
+  return content.filter(function (context) {
+    return context.get('type') === DESCRIPTION_CONTEXT$3;
+  });
 }
 
 function render$2() {
-  var tree = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : immutable.List();
 
-  var contentString = tree.filter(function (context, index) {
-    return filterInterlineDescriptions(tree, context, index);
-  }).map(function (context) {
+  var sanitizedContent = filterInterlineDescriptions(content);
+  var bioContexts = findBioContexts(sanitizedContent);
+  var descriptionContexts = findDescriptions(sanitizedContent);
+
+  var bioString = bioContexts.map(function (context) {
     return context.get('content');
   }).join('');
+  var descriptionString = '';
 
-  return '\n    <section class="bio">\n      ' + contentString + '\n    </section>\n  ';
+  if (descriptionContexts.size > 0) {
+    descriptionString = descriptionContexts.get(descriptionContexts.size - 1).get('content');
+  }
+
+  return '\n    <section class="bio">\n      ' + bioString + '\n    </section>\n    \n    ' + descriptionString + '\n  ';
 }
 
 var bio$2 = {
@@ -12662,6 +12792,118 @@ var descriptionText = {
   render: render$20
 };
 
+var IMAGE_TITLE_CONTEXT$1 = constants.IMAGE_TITLE_CONTEXT;
+var IMAGE_URL_CONTEXT$1 = constants.IMAGE_URL_CONTEXT;
+
+
+function _render() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : immutable.List();
+  var global = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  if (content.size === 0) {
+    return '';
+  }
+
+  var title = getTitle(content);
+  var url = getUrl(content);
+
+  if (!url) {
+    return '';
+  }
+
+  var isExternal = isExternalUrl(url);
+
+  if (isExternal) {
+    return renderImage(title, url);
+  }
+
+  if (!global.wfmPlaygroundImages) {
+    return '';
+  }
+
+  return renderImage(title, global.wfmPlaygroundImages[url] || '');
+}
+
+function isExternalUrl() {
+  var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+  var PATTERN = /^https?:\/\//;
+
+  return PATTERN.test(url);
+}
+
+function getTitle(content) {
+  var titleContext = content.find(function (context) {
+    return context.get('type') === IMAGE_TITLE_CONTEXT$1;
+  });
+
+  if (!titleContext) {
+    return '';
+  }
+
+  return titleContext.get('content');
+}
+
+function getUrl(content) {
+  var linkContext = content.find(function (context) {
+    return context.get('type') === IMAGE_URL_CONTEXT$1;
+  });
+
+  if (!linkContext) {
+    return;
+  }
+
+  return linkContext.get('content');
+}
+
+function renderImage(title, url) {
+  return '\n    <figure class="image">\n      <img class="image__picture" src="' + url + '" alt="' + title + '"/>\n    </figure>\n  ';
+}
+
+var playgroundImage = function playgroundImage(global) {
+  return {
+    render: function render(content) {
+      return _render(content, global);
+    }
+  };
+};
+
+function render$21() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  var contentString = content.map(function (context) {
+    return context.get('content');
+  }).join(' ');
+
+  if (!contentString) {
+    return '';
+  }
+
+  return contentString;
+}
+
+var imageTitle = {
+  render: render$21
+};
+
+function render$22() {
+  var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  var contentString = content.map(function (context) {
+    return context.get('content');
+  }).join(' ');
+
+  if (!contentString) {
+    return '';
+  }
+
+  return contentString;
+}
+
+var imageUrl = {
+  render: render$22
+};
+
 var _renderersMap;
 
 var BODY_RENDERER_KEY = constants.BODY_RENDERER_KEY;
@@ -12684,9 +12926,12 @@ var DESCRIPTION_LINK_RENDERER_KEY = constants.DESCRIPTION_LINK_RENDERER_KEY;
 var DESCRIPTION_LINK_TITLE_RENDERER_KEY = constants.DESCRIPTION_LINK_TITLE_RENDERER_KEY;
 var DESCRIPTION_LINK_URL_RENDERER_KEY = constants.DESCRIPTION_LINK_URL_RENDERER_KEY;
 var DESCRIPTION_TEXT_RENDERER_KEY = constants.DESCRIPTION_TEXT_RENDERER_KEY;
+var IMAGE_RENDERER_KEY = constants.IMAGE_RENDERER_KEY;
+var IMAGE_TITLE_RENDERER_KEY = constants.IMAGE_TITLE_RENDERER_KEY;
+var IMAGE_URL_RENDERER_KEY = constants.IMAGE_URL_RENDERER_KEY;
 
 
-var renderersMap = (_renderersMap = {}, defineProperty$1(_renderersMap, BODY_RENDERER_KEY, playgrountSetupBody), defineProperty$1(_renderersMap, BIO_RENDERER_KEY, bio$2), defineProperty$1(_renderersMap, BIO_LINE_RENDERER_KEY, bioLine), defineProperty$1(_renderersMap, SETUP_RENDERER_KEY, setup$2), defineProperty$1(_renderersMap, ENVIRONMENT_RENDERER_KEY, environment$2), defineProperty$1(_renderersMap, DESCRIPTION_RENDERER_KEY, description$2), defineProperty$1(_renderersMap, ENVIRONMENT_HEADER_RENDERER_KEY, environmentHeader$2), defineProperty$1(_renderersMap, ENVIRONMENT_TITLE_RENDERER_KEY, environmentTitle), defineProperty$1(_renderersMap, TOOLS_LIST_RENDERER_KEY, toolsList$2), defineProperty$1(_renderersMap, TOOL_ITEM_RENDERER_KEY, toolItem$2), defineProperty$1(_renderersMap, TOOL_HEAD_RENDERER_KEY, toolHead$2), defineProperty$1(_renderersMap, TOOL_NAMES_LIST_RENDERER_KEY, toolNamesList$2), defineProperty$1(_renderersMap, TOOL_NAME_RENDERER_KEY, toolName$2), defineProperty$1(_renderersMap, TOOL_TITLE_RENDERER_KEY, toolTitle), defineProperty$1(_renderersMap, TOOL_LINK_RENDERER_KEY, toolLink), defineProperty$1(_renderersMap, DESCRIPTION_PARAGRAPH_RENDERER_KEY, descriptionParagraph$2), defineProperty$1(_renderersMap, DESCRIPTION_LINK_RENDERER_KEY, descriptionLink$2), defineProperty$1(_renderersMap, DESCRIPTION_LINK_TITLE_RENDERER_KEY, descriptionLinkTitle), defineProperty$1(_renderersMap, DESCRIPTION_LINK_URL_RENDERER_KEY, descriptionLinkUrl), defineProperty$1(_renderersMap, DESCRIPTION_TEXT_RENDERER_KEY, descriptionText), _renderersMap);
+var renderersMap = (_renderersMap = {}, defineProperty$1(_renderersMap, BODY_RENDERER_KEY, playgrountSetupBody), defineProperty$1(_renderersMap, BIO_RENDERER_KEY, bio$2), defineProperty$1(_renderersMap, BIO_LINE_RENDERER_KEY, bioLine), defineProperty$1(_renderersMap, SETUP_RENDERER_KEY, setup$2), defineProperty$1(_renderersMap, ENVIRONMENT_RENDERER_KEY, environment$2), defineProperty$1(_renderersMap, DESCRIPTION_RENDERER_KEY, description$2), defineProperty$1(_renderersMap, ENVIRONMENT_HEADER_RENDERER_KEY, environmentHeader$2), defineProperty$1(_renderersMap, ENVIRONMENT_TITLE_RENDERER_KEY, environmentTitle), defineProperty$1(_renderersMap, TOOLS_LIST_RENDERER_KEY, toolsList$2), defineProperty$1(_renderersMap, TOOL_ITEM_RENDERER_KEY, toolItem$2), defineProperty$1(_renderersMap, TOOL_HEAD_RENDERER_KEY, toolHead$2), defineProperty$1(_renderersMap, TOOL_NAMES_LIST_RENDERER_KEY, toolNamesList$2), defineProperty$1(_renderersMap, TOOL_NAME_RENDERER_KEY, toolName$2), defineProperty$1(_renderersMap, TOOL_TITLE_RENDERER_KEY, toolTitle), defineProperty$1(_renderersMap, TOOL_LINK_RENDERER_KEY, toolLink), defineProperty$1(_renderersMap, DESCRIPTION_PARAGRAPH_RENDERER_KEY, descriptionParagraph$2), defineProperty$1(_renderersMap, DESCRIPTION_LINK_RENDERER_KEY, descriptionLink$2), defineProperty$1(_renderersMap, DESCRIPTION_LINK_TITLE_RENDERER_KEY, descriptionLinkTitle), defineProperty$1(_renderersMap, DESCRIPTION_LINK_URL_RENDERER_KEY, descriptionLinkUrl), defineProperty$1(_renderersMap, DESCRIPTION_TEXT_RENDERER_KEY, descriptionText), defineProperty$1(_renderersMap, IMAGE_RENDERER_KEY, playgroundImage(window)), defineProperty$1(_renderersMap, IMAGE_TITLE_RENDERER_KEY, imageTitle), defineProperty$1(_renderersMap, IMAGE_URL_RENDERER_KEY, imageUrl), _renderersMap);
 
 var setupHtmlPlayground = function setupHtmlPlayground() {
   var tree = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -12694,38 +12939,200 @@ var setupHtmlPlayground = function setupHtmlPlayground() {
   return render_1(tree, renderersMap, false);
 };
 
+var DEFAULT_TEXT = '\nname: John \uD83D\uDE0E Doe\noccupation: Rocket Scientist\nlink: https://en.wikipedia.org/wiki/John_Doe\n\n> emacs\n\nAny other software does not make any sense...\n';
+var CONTENT_STORAGE_KEY = 'input-content';
+
+var playgroundElement = document.querySelector('.playground');
 var inputElement = document.querySelector('.input');
 var resultElement = document.querySelector('.result');
-var cheatsheetBody = document.querySelector('.cheatsheet');
-var cheatsheetTrigger = document.querySelector('.cheatsheet-trigger');
 
-inputElement.addEventListener('input', function (event) {
-  return renderSetup(event.target.value);
-});
+var sheetBackdropElement = document.querySelector('.sheet-backdrop');
 
-cheatsheetTrigger.addEventListener('mouseenter', showCheatsheet);
-cheatsheetTrigger.addEventListener('focus', showCheatsheet);
+var imagesBodyElement = document.querySelector('.images');
+var imagesListElement = document.querySelector('.images__list');
+var imagesTriggerElement = document.querySelector('.images-trigger');
+var uploadImagesInputElement = document.querySelector('.upload-images__input');
 
-cheatsheetTrigger.addEventListener('mouseleave', hideCheatsheet);
-cheatsheetTrigger.addEventListener('blur', hideCheatsheet);
+var cheatSheetBodyElement = document.querySelector('.cheatsheet');
+var cheatSheetTriggerElement = document.querySelector('.cheatsheet-trigger');
+
+var imagesSheetOpened = false;
+var cheatSheetOpened = false;
+
+sheetBackdropElement.remove();
+imagesBodyElement.remove();
+cheatSheetBodyElement.remove();
+
+inputElement.addEventListener('input', onInput);
+
+imagesTriggerElement.addEventListener('click', onImagesTriggerClick);
+cheatSheetTriggerElement.addEventListener('click', onCheatTriggerClick);
+sheetBackdropElement.addEventListener('click', onSheetBackdropClick);
+
+uploadImagesInputElement.addEventListener('change', onImagesSelect);
+
+function createImage(filename, blobUrl) {
+  var container = document.createElement('div');
+  var image = document.createElement('img');
+  var title = document.createElement('div');
+
+  container.classList.add('images__image-container');
+  image.classList.add('images__picture');
+  title.classList.add('images__title');
+
+  image.src = blobUrl;
+  title.textContent = filename;
+
+  container.appendChild(image);
+  container.appendChild(title);
+  imagesListElement.prepend(container);
+}
+
+function toggleBackdrop(show) {
+  if (show) {
+    playgroundElement.appendChild(sheetBackdropElement);
+    setTimeout(function () {
+      sheetBackdropElement.classList.remove('hidden');
+    });
+  } else {
+    sheetBackdropElement.classList.add('hidden');
+    setTimeout(function () {
+      sheetBackdropElement.remove();
+    }, 200);
+  }
+}
+
+function toggleSheet(triggerElement, sheetElement, show) {
+  if (show) {
+    playgroundElement.appendChild(sheetElement);
+    triggerElement.classList.add('active');
+    setTimeout(function () {
+      sheetElement.classList.remove('hidden');
+    });
+  } else {
+    triggerElement.classList.remove('active');
+    sheetElement.classList.add('hidden');
+    setTimeout(function () {
+      sheetElement.remove();
+    }, 200);
+  }
+}
+
+function activateImagesTrigger() {
+  imagesTriggerElement.removeAttribute('disabled');
+}
+
+function saveImage(filename, blobUrl) {
+  if (!window.wfmPlaygroundImages) {
+    window.wfmPlaygroundImages = {};
+  }
+
+  window.wfmPlaygroundImages['./' + filename] = blobUrl;
+}
+
+function toggleCheatSheet(show) {
+  cheatSheetOpened = show;
+  toggleSheet(cheatSheetTriggerElement, cheatSheetBodyElement, cheatSheetOpened);
+}
+
+function toggleImagesSheet(show) {
+  imagesSheetOpened = show;
+  toggleSheet(imagesTriggerElement, imagesBodyElement, imagesSheetOpened);
+}
+
+function onImagesTriggerClick() {
+  imagesSheetOpened = !imagesSheetOpened;
+  toggleSheet(imagesTriggerElement, imagesBodyElement, imagesSheetOpened);
+
+  if (imagesSheetOpened) {
+    if (!cheatSheetOpened) {
+      toggleBackdrop(true);
+    }
+  } else {
+    toggleBackdrop(false);
+  }
+
+  if (cheatSheetOpened) {
+    toggleCheatSheet(false);
+  }
+}
+
+function onCheatTriggerClick() {
+  cheatSheetOpened = !cheatSheetOpened;
+  toggleSheet(cheatSheetTriggerElement, cheatSheetBodyElement, cheatSheetOpened);
+
+  if (cheatSheetOpened) {
+    if (!imagesSheetOpened) {
+      toggleBackdrop(true);
+    }
+  } else {
+    toggleBackdrop(false);
+  }
+
+  if (imagesSheetOpened) {
+    toggleImagesSheet(false);
+  }
+}
+
+function onImagesSelect(event) {
+  Array.from(event.target.files).forEach(function (file) {
+    var reader = new FileReader();
+
+    reader.onload = function (uploadEvent) {
+      var blob = new Blob([uploadEvent.target.result], { type: file.type });
+      var blobUrl = URL.createObjectURL(blob);
+
+      saveImage(file.name, blobUrl);
+      createImage(file.name, blobUrl);
+      renderSetup(inputElement.value);
+    };
+    reader.readAsArrayBuffer(file);
+  });
+
+  activateImagesTrigger();
+  if (!imagesSheetOpened) {
+    toggleImagesSheet(true);
+
+    if (!cheatSheetOpened) {
+      toggleBackdrop(true);
+    }
+  }
+  event.target.value = '';
+}
+
+function onSheetBackdropClick() {
+  if (imagesSheetOpened) {
+    toggleImagesSheet(false);
+  }
+
+  if (cheatSheetOpened) {
+    toggleCheatSheet(false);
+  }
+
+  toggleBackdrop(false);
+}
+
+function onInput(event) {
+  window.sessionStorage.setItem(CONTENT_STORAGE_KEY, event.target.value);
+  renderSetup(event.target.value);
+}
 
 function renderSetup(content) {
   var ast = setupAstPlayground(content);
   var html = setupHtmlPlayground(ast);
 
-  resultElement.innerHTML = html;
+  setTimeout(function () {
+    return resultElement.innerHTML = html;
+  });
 }
 
-function showCheatsheet() {
-  cheatsheetBody.classList.remove('hidden');
-}
+var initialValue = window.sessionStorage.getItem(CONTENT_STORAGE_KEY) || DEFAULT_TEXT;
 
-function hideCheatsheet() {
-  cheatsheetBody.classList.add('hidden');
-}
-
-renderSetup(inputElement.value);
-
+inputElement.value = initialValue;
+setTimeout(function () {
+  return inputElement.scrollTop = 0;
+});
+renderSetup(initialValue);
 inputElement.focus();
 
 var playground = {};

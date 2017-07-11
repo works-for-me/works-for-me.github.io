@@ -7,26 +7,10 @@
     <language>en</language>
     <item>
       <title>Updated setup: Nikolay Garmash (Frontend developer)</title>
-      <description>Added links to my .dotfiles and podcasts I listen</description>
+      <description>Added images and list of RSS-subscriptions</description>
       <author>Nikolay Garmash (Frontend developer)</author>
-      <pubDate>Thu, 15 Jun 2017 10:09:54 GMT</pubDate>
-      <guid>4472d484a48796520aa5aab55eb143f3c46bc82a</guid>
-      <link>https://works-for-me.github.io/setups/nikolay-garmash.html</link>
-    </item>
-    <item>
-      <title>Updated setup: Nikolay Garmash (Frontend developer)</title>
-      <description>Major refactoring of the setup.</description>
-      <author>Nikolay Garmash (Frontend developer)</author>
-      <pubDate>Tue, 06 Jun 2017 19:38:27 GMT</pubDate>
-      <guid>3aba98ac02970453dd540aab9d8cb4f18c507c9c</guid>
-      <link>https://works-for-me.github.io/setups/nikolay-garmash.html</link>
-    </item>
-    <item>
-      <title>Updated setup: Nikolay Garmash (Frontend developer)</title>
-      <description>Switch to WebStorm Switched from Sublime Text as it's pretty much not supported as well as third-party plugins.</description>
-      <author>Nikolay Garmash (Frontend developer)</author>
-      <pubDate>Thu, 16 Mar 2017 16:15:20 GMT</pubDate>
-      <guid>6d6e0d0152ad57ee65ff155ae1c0dffdcf472cb5</guid>
+      <pubDate>Mon, 10 Jul 2017 19:34:17 GMT</pubDate>
+      <guid>09da7f0e9c65ee9f26afecb3eb0b44cd0af55c46</guid>
       <link>https://works-for-me.github.io/setups/nikolay-garmash.html</link>
     </item>
   </channel>

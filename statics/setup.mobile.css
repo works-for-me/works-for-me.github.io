@@ -1,20 +1,60 @@
+@media screen and (max-width: 1340px) {
+  .bio {
+    position: static;
+    width: 700px;
+    padding: 0 30px;
+    margin-bottom: 28px;
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (max-width: 934px) {
+  .header {
+    align-self: center;
+    width: 700px;
+    padding: 8px 30px;
+  }
+}
+
 @media screen and (max-width: 700px) {
   body {
     align-items: flex-start;
   }
 
-  .setup-root {
+  .header {
+    flex-direction: column;
+    width: 100%;
+    padding: 30px;
+  }
+
+  .logo {
+    display: none;
+  }
+
+  .logo.inline {
+    display: block;
     width: 100%;
   }
 
-  .goto-list {
-    position: static;
-    padding: 30px 30px 0 30px;
+  .navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+  }
+
+  .navigation-item + .navigation-item {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .setup-root {
+    margin-top: 0;
   }
 
   .bio {
+    width: 100%;
     text-align: left;
-    padding: 30px 0;
   }
 
   .latest-update {
@@ -22,7 +62,9 @@
     padding: 0;
   }
 
-  .setup {
-    max-width: 100%;
+  .description-paragraph,
+  .environment-title,
+  .tool-head {
+    width: 100%;
   }
 }
