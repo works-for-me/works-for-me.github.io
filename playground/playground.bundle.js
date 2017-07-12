@@ -12783,9 +12783,11 @@ var descriptionLinkUrl = {
 function render$20() {
   var content = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-  return content.map(function (context) {
+  var contentString = content.map(function (context) {
     return context.get('content');
   }).join(' ');
+
+  return '\n    <span>' + contentString + '</span>\n  ';
 }
 
 var descriptionText = {
