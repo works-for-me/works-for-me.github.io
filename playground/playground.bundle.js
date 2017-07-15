@@ -13078,11 +13078,11 @@ function onCheatTriggerClick() {
 
 function onImagesSelect(event) {
   Array.from(event.target.files).forEach(function (file) {
-    var reader = new FileReader();
+    var reader = new window.FileReader();
 
     reader.onload = function (uploadEvent) {
-      var blob = new Blob([uploadEvent.target.result], { type: file.type });
-      var blobUrl = URL.createObjectURL(blob);
+      var blob = new window.Blob([uploadEvent.target.result], { type: file.type });
+      var blobUrl = window.URL.createObjectURL(blob);
 
       saveImage(file.name, blobUrl);
       createImage(file.name, blobUrl);
@@ -13124,7 +13124,7 @@ function renderSetup(content) {
   var html = setupHtmlPlayground(ast);
 
   setTimeout(function () {
-    return resultElement.innerHTML = html;
+    resultElement.innerHTML = html;
   });
 }
 
@@ -13132,7 +13132,7 @@ var initialValue = window.sessionStorage.getItem(CONTENT_STORAGE_KEY) || DEFAULT
 
 inputElement.value = initialValue;
 setTimeout(function () {
-  return inputElement.scrollTop = 0;
+  inputElement.scrollTop = 0;
 });
 renderSetup(initialValue);
 inputElement.focus();
