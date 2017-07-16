@@ -11080,7 +11080,7 @@ var immutable = createCommonjsModule(function (module, exports) {
 
 var constants = {
   TITLE: 'Works For Me',
-  DESCRIPTION: 'Collection of software setups from people who care about tools they use.',
+  DESCRIPTION: 'Collection of developer toolkits',
   BASE_URL: 'https://works-for-me.github.io',
   DIST_FOLDER: 'dist',
   // parser keys

@@ -2,7 +2,7 @@
 <rss version="2.0">
   <channel>
     <title>Works For Me</title>
-    <description>Collection of software setups from people who care about tools they use.</description>
+    <description>Collection of developer toolkits</description>
     <link>https://works-for-me.github.io</link>
     <language>en</language>
     <item>
@@ -11,7 +11,7 @@
       <author>Billy Fagan (Software developer, doing mostly web stuff these days.)</author>
       <pubDate>Wed, 12 Jul 2017 07:38:39 GMT</pubDate>
       <guid>3da61c0d4e9ea0f9e6c8b361e1c30bccdcee277d</guid>
-      <link>https://works-for-me.github.io/setups/billy-fagan/billy-fagan.html</link>
+      <link>https://works-for-me.github.io/toolkits/billy-fagan/billy-fagan.html</link>
     </item>
     <item>
       <title>Updated setup: Nikolay Garmash (Frontend developer)</title>
@@ -19,7 +19,7 @@
       <author>Nikolay Garmash (Frontend developer)</author>
       <pubDate>Tue, 11 Jul 2017 15:14:53 GMT</pubDate>
       <guid>a93add7fa457b7e6f5e25c6e312e31287c6080d2</guid>
-      <link>https://works-for-me.github.io/setups/nikolay-garmash/nikolay-garmash.html</link>
+      <link>https://works-for-me.github.io/toolkits/nikolay-garmash/nikolay-garmash.html</link>
     </item>
     <item>
       <title>Updated setup: Nikolay Garmash (Frontend developer)</title>
@@ -27,7 +27,31 @@
       <author>Nikolay Garmash (Frontend developer)</author>
       <pubDate>Mon, 10 Jul 2017 19:34:17 GMT</pubDate>
       <guid>09da7f0e9c65ee9f26afecb3eb0b44cd0af55c46</guid>
-      <link>https://works-for-me.github.io/setups/nikolay-garmash/nikolay-garmash.html</link>
+      <link>https://works-for-me.github.io/toolkits/nikolay-garmash/nikolay-garmash.html</link>
+    </item>
+    <item>
+      <title>Updated setup: Nikolay Garmash (Frontend developer)</title>
+      <description>Added links to my .dotfiles and podcasts I listen</description>
+      <author>Nikolay Garmash (Frontend developer)</author>
+      <pubDate>Thu, 15 Jun 2017 10:09:54 GMT</pubDate>
+      <guid>4472d484a48796520aa5aab55eb143f3c46bc82a</guid>
+      <link>https://works-for-me.github.io/toolkits/nikolay-garmash/nikolay-garmash.html</link>
+    </item>
+    <item>
+      <title>Updated setup: Nikolay Garmash (Frontend developer)</title>
+      <description>Major refactoring of the setup.</description>
+      <author>Nikolay Garmash (Frontend developer)</author>
+      <pubDate>Tue, 06 Jun 2017 19:38:27 GMT</pubDate>
+      <guid>3aba98ac02970453dd540aab9d8cb4f18c507c9c</guid>
+      <link>https://works-for-me.github.io/toolkits/nikolay-garmash/nikolay-garmash.html</link>
+    </item>
+    <item>
+      <title>Updated setup: Nikolay Garmash (Frontend developer)</title>
+      <description>Switch to WebStorm Switched from Sublime Text as it's pretty much not supported as well as third-party plugins.</description>
+      <author>Nikolay Garmash (Frontend developer)</author>
+      <pubDate>Thu, 16 Mar 2017 16:15:20 GMT</pubDate>
+      <guid>6d6e0d0152ad57ee65ff155ae1c0dffdcf472cb5</guid>
+      <link>https://works-for-me.github.io/toolkits/nikolay-garmash/nikolay-garmash.html</link>
     </item>
     <item>
       <title>New setup: Sara Federico (Software Engineer @ Freight Farms)</title>
@@ -35,7 +59,7 @@
       <author>Sara Federico (Software Engineer @ Freight Farms)</author>
       <pubDate>Thu, 13 Jul 2017 01:02:24 GMT</pubDate>
       <guid>ce5e9d9a28d244cd4120affd62682fac7f451746</guid>
-      <link>https://works-for-me.github.io/setups/sara-federico/sara-federico.html</link>
+      <link>https://works-for-me.github.io/toolkits/sara-federico/sara-federico.html</link>
     </item>
   </channel>
 </rss>
